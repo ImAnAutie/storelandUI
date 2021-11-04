@@ -1,8 +1,0 @@
-{
-  "realm": "storeland",
-  "auth-server-url": "https://keycloak.dicsolve.com/auth",
-  "ssl-required": "external",
-  "resource": "storelandUI",
-  "public-client": true,
-  "confidential-port": 0
-}

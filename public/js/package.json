@@ -1,0 +1,25 @@
+{
+  "name": "storelandui",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "alpinejs": "^3.5.0",
+    "navigo": "^7.1.2"
+  },
+  "standard": {
+    "globals": [
+      "$"
+    ]
+  }
+}
