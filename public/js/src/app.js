@@ -5,6 +5,9 @@ const Navigo = require("navigo");
 import Alpine from "alpinejs";
 window.Alpine = Alpine;
 
+import { Iodine } from '@kingshott/iodine';
+const iodine = new Iodine();
+
 const initKeycloak = async function () {
     console.log("initKeycloak");
   var keycloak = new Keycloak({url: "https://keycloak.dicsolve.com/auth",
@@ -98,7 +101,22 @@ router.notFound(function () {
   load404();
 });
 
-  Alpine.store("appIssues", []);
+Alpine.store("utilityFunctions", {
+  fileToDataUrl: async function(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        //A blank response here, handles the case where the user has not selected a file  
+        resolve("");
+      }
+      var reader = new FileReader();
+      reader.onload = function(event) {
+          resolve(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+});
+Alpine.store("appIssues", []);
   Alpine.store("customers", {
     new: [],
     all: [],
@@ -141,6 +159,7 @@ router.notFound(function () {
   });
   Alpine.store("appUser", {
     displayName: "",
+    logo: "",
   });
   Alpine.store("appLogo", "/img/logo.png");
 
@@ -150,15 +169,85 @@ router.notFound(function () {
     return await response.text();
   });
   Alpine.store("loadPage", async function (page) {
-    Alpine.store("appLoading",true);
+    Alpine.store("appLoading",false);
+    Alpine.store("loading",true);
       console.log(`Loading page: ${page}`);
     const response = await fetch(`/pages/${page}.html`);
     console.log("Got response");
+    switch(page) {
+      case "company/new":
+        console.log("About to load the new company page, initing alpine data model");
+        Alpine.store("pageCompanyNew",{
+          name: "",
+          logo: "",
+          acceptedTerms: false,
+          fieldValidations: {
+            name: true,
+            logo: true,
+            acceptedTerms: true
+          },
+          validateField: function(fieldName) {
+            const pageCompanyNew = Alpine.store("pageCompanyNew");
+            switch (fieldName) {
+              case "name":
+                pageCompanyNew.fieldValidations.name =  iodine.isValid(pageCompanyNew.name, ['required']);
+                break;
+            }
+          },
+          formSubmitError: function(title,message) {
+            Alpine.store("appAlert").show(
+              title,
+              message,
+              "Cancel",
+              "Ok",
+              "gray",
+              false,
+              function() {
+                  Alpine.store("appAlert").hide();
+              }
+            )
+          },
+          formSubmit: async function() {
+            console.log("Validating new company data");
+            const pageCompanyNew = Alpine.store("pageCompanyNew");
+            if (!iodine.isValid(pageCompanyNew.name, ['required'])) {
+              return pageCompanyNew.formSubmitError("Company name required", "Please enter a company name");
+            }
+            if (!iodine.isValid(pageCompanyNew.logo, ['required'])) {
+              return pageCompanyNew.formSubmitError("Company logo required", "Please upload a logo for your company");
+            }
+            if (!pageCompanyNew.acceptedTerms) {
+              return pageCompanyNew.formSubmitError("Terms and conditions", "You need to read and accept our terms and conditions");
+            }
+
+            const newCompanyData = {
+              name: pageCompanyNew.name,
+              logo: pageCompanyNew.logo,
+            };
+            console.log("Submtting new company");
+            console.table(newCompanyData);
+            Alpine.store("appAlert").show(
+              "Mock request data",
+              JSON.stringify(newCompanyData),
+              "Cancel",
+              "Ok",
+              "gray",
+              false,
+              function() {
+                  Alpine.store("appAlert").hide();
+              }
+            )
+            //@TODO actually do it
+          }
+        })
+        break;
+    }
     Alpine.store("mainPage", await response.text());
-    Alpine.store("appLoading",false);
+    Alpine.store("loading",false);
   });
   Alpine.store("mainContent", "");
   Alpine.store("appLoading", true);
+  Alpine.store("loading", false);
   Alpine.store("appCompany", {
     selected: false,
   });

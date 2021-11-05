@@ -14,6 +14,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "@kingshott/iodine": "^7.0.0",
     "alpinejs": "^3.5.0",
     "navigo": "^7.1.2"
   },
