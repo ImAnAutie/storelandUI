@@ -8,65 +8,301 @@
 
 
 
-<form x-data @submit.prevent="$store.pageCompanyNew.formSubmit">
-<div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
-<label class="block">
-  <input x-data x-bind:class="{ 'border-red-700' : !$store.pageCompanyNew.fieldValidations.name}" x-on:change="$store.pageCompanyNew.validateField('name');" x-model="$store.pageCompanyNew.name" class="form-input mt-1 block w-full" placeholder="My Company Co" />
-  
-</label>
-
-<label
-  class="
-    flex flex-col
-    items-center
-    px-4
-    py-6
-    bg-white
-    rounded-md
-    shadow-md
-    tracking-wide
-    uppercase
-    border border-blue
-    cursor-pointer
-    hover:bg-purple-600 hover:text-white
-    text-purple-600
-    ease-linear
-    transition-all
-    duration-150
-  "
->
-  <i class="fas fa-cloud-upload-alt fa-3x"></i>
-  <span class="mt-2 text-base leading-normal">Upload logo</span>
-  <input x-ref="file" @change="$store.pageCompanyNew.logo = await $store.utilityFunctions.fileToDataUrl($refs.file.files[0])" type="file" class="hidden" />
-</label>
-<img x-data x-show="$store.pageCompanyNew.logo" x-bind:src="$store.pageCompanyNew.logo" class="h-24 w-24" />
-
-<div class="flex mt-6">
-  <label class="flex items-center">
-    <input x-data x-model="$store.pageCompanyNew.acceptedTerms" type="checkbox" class="form-checkbox" />
-<!-- @TODO fill in terms link -->
-    <span class="ml-2"
-      >I agree to the <button type="button" @click.stop="alert('@TODO fill in terms link here');  " class="underline">terms of service</button></span
-    >
-  </label>
-</div>
-<button type="submit"   class="
-    flex flex-col w-full
-    items-center
-    bg-white
-    rounded-md
-    shadow-md
-    tracking-wide
-    uppercase
-    border border-blue
-    cursor-pointer
-    hover:bg-green-600 hover:text-white
-    text-green-600
-    ease-linear
-    transition-all
-    duration-150
-  " type="button">
-  <i class="fas fa-plus"></i> Create
-</button>
-</div>
-</form>
+            <div class="flex flex-col">
+              <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                  <div
+                    class="
+                      shadow
+                      overflow-hidden
+                      border-b border-gray-200
+                      sm:rounded-lg
+                    "
+                  >
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                        <tr>
+                          <th
+                            scope="col"
+                            class="
+                              px-6
+                              py-3
+                              text-left text-xs
+                              font-medium
+                              text-gray-500
+                              uppercase
+                              tracking-wider
+                            "
+                          >
+                            Name
+                          </th>
+                          <th
+                            scope="col"
+                            class="
+                              px-6
+                              py-3
+                              text-left text-xs
+                              font-medium
+                              text-gray-500
+                              uppercase
+                              tracking-wider
+                            "
+                          >
+                            Title
+                          </th>
+                          <th
+                            scope="col"
+                            class="
+                              px-6
+                              py-3
+                              text-left text-xs
+                              font-medium
+                              text-gray-500
+                              uppercase
+                              tracking-wider
+                            "
+                          >
+                            Email
+                          </th>
+                          <th
+                            scope="col"
+                            class="
+                              px-6
+                              py-3
+                              text-left text-xs
+                              font-medium
+                              text-gray-500
+                              uppercase
+                              tracking-wider
+                            "
+                          >
+                            Role
+                          </th>
+                          <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Edit</span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                              <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                  Flora Wu
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              Software engineer, IT
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              flora.wu@example.com
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            Admin
+                          </td>
+                          <td
+                            class="
+                              px-6
+                              py-4
+                              whitespace-nowrap
+                              text-right text-sm
+                              font-medium
+                            "
+                          >
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
+                              >Edit</a
+                            >
+                          </td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                              <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                  Nida Povey
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">CMO, Marketing</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              nida.povey@example.com
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            Admin
+                          </td>
+                          <td
+                            class="
+                              px-6
+                              py-4
+                              whitespace-nowrap
+                              text-right text-sm
+                              font-medium
+                            "
+                          >
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
+                              >Edit</a
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                              <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                  Warren Nixon
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">Designer, UI/UX</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              warren.nixon@example.com
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            Admin
+                          </td>
+                          <td
+                            class="
+                              px-6
+                              py-4
+                              whitespace-nowrap
+                              text-right text-sm
+                              font-medium
+                            "
+                          >
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
+                              >Edit</a
+                            >
+                          </td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                              <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                  Flora Wu
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              Software engineer, IT
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              flora.wu@example.com
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            Admin
+                          </td>
+                          <td
+                            class="
+                              px-6
+                              py-4
+                              whitespace-nowrap
+                              text-right text-sm
+                              font-medium
+                            "
+                          >
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
+                              >Edit</a
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                              <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                  Nida Povey
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">CMO, Marketing</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              nida.povey@example.com
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            Admin
+                          </td>
+                          <td
+                            class="
+                              px-6
+                              py-4
+                              whitespace-nowrap
+                              text-right text-sm
+                              font-medium
+                            "
+                          >
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
+                              >Edit</a
+                            >
+                          </td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                              <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                  Warren Nixon
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">Designer, UI/UX</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">
+                              warren.nixon@example.com
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            Admin
+                          </td>
+                          <td
+                            class="
+                              px-6
+                              py-4
+                              whitespace-nowrap
+                              text-right text-sm
+                              font-medium
+                            "
+                          >
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
+                              >Edit</a
+                            >
+                          </td>
+                        </tr>
+            
+                        <!-- More people... -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
