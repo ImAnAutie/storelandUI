@@ -135,8 +135,6 @@ const initKeycloak = async function () {
             return; 
           } else {
             console.log("User has no companies")
-            delete localStorage.selectedCompanyId;
-            location.reload();
             }
         } else {
           console.log("API returned false status, something went wrong");
