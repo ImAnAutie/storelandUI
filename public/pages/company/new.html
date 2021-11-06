@@ -11,7 +11,8 @@
 <form x-data @submit.prevent="$store.pageCompanyNew.formSubmit">
 <div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
 <label class="block">
-  <input x-data x-bind:class="{ 'border-red-700' : !$store.pageCompanyNew.fieldValidations.name}" x-on:change="$store.pageCompanyNew.validateField('name');" x-model="$store.pageCompanyNew.name" class="form-input mt-1 block w-full" placeholder="My Company Co" />
+  <input x-data 
+  x-bind:class="{ 'border-red-700' : !$store.pageCompanyNew.fieldValidations.name}" x-on:change="$store.pageCompanyNew.validateField('name');" x-model="$store.pageCompanyNew.name" class="form-input mt-1 block w-full" placeholder="My Company Co" />
   
 </label>
 

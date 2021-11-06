@@ -56,18 +56,17 @@
                         </tr>
                       </thead>
                       <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
+                        <template x-for="(company, index) in $store.pageCompanyList" :key="index">
+                        <tr x-data x-bind:class="{ 'bg-gray-50' : !$store.utilityFunctions.isEven(index)}">
                           <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                               <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                  Flora Wu
-                                </div>
+                                <div x-data x-text="company.name" class="text-sm font-medium text-gray-900"></div>
                               </div>
                             </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            Admin
+                            <img x-data x-bind:src="company.logo" class="w-14 h-14" />
                           </td>
                           <td
                             class="
@@ -78,38 +77,11 @@
                               font-medium
                             "
                           >
-                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                              >Edit</a
-                            >
+                            <button x-data @click="$store.switchCompany(company._id,true)" class="text-indigo-600 hover:text-indigo-900"
+                              >Switch</button>
                           </td>
                         </tr>
-                        <tr class="bg-gray-50">
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                              <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                  Nida Povey
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            Admin
-                          </td>
-                          <td
-                            class="
-                              px-6
-                              py-4
-                              whitespace-nowrap
-                              text-right text-sm
-                              font-medium
-                            "
-                          >
-                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                              >Edit</a
-                            >
-                          </td>
-                        </tr>
+                        </template>
                       </tbody>
                     </table>
                   </div>

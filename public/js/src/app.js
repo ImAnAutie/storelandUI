@@ -255,6 +255,12 @@ router.notFound(function () {
 });
 
 Alpine.store("utilityFunctions", {
+  isEven: function isEven(value) {
+    if (value%2 == 0)
+      return true;
+    else
+      return false;
+  },
   fileToDataUrl: async function (file) {
     return new Promise((resolve, reject) => {
       if (!file) {
@@ -317,9 +323,12 @@ Alpine.store("appUser", {
   logo: "",
 });
 Alpine.store("appLogo", "/img/logo.png");
-Alpine.store("switchCompany", function (selectedCompanyId) {
+Alpine.store("switchCompany", function (selectedCompanyId,reloadAfter) {
   console.log("Switch company");
   localStorage.selectedCompanyId = selectedCompanyId;
+  if (reloadAfter) {
+    location.reload();
+  }
 });
 Alpine.store("mainPage", "");
 Alpine.store("loadFragment", async function (fragment) {
@@ -345,6 +354,63 @@ Alpine.store("loadPage", async function (page) {
   const response = await fetch(`/pages/${page}.html`);
   console.log("Got response");
   switch (page) {
+    case "company/list":
+      console.log("About to load the company list page, initing alpine data model");
+      try {
+        await keycloak.updateToken(30);
+        const companyReq = await fetch(
+          `${config("storelandCORE")}/company/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${keycloak.token}`,
+            },
+            body: null,
+          }
+        );
+        console.log("Got response");
+        const companyRes = await companyReq.json();
+        console.table(companyRes);
+        if (companyRes.status) {
+          Alpine.store('pageCompanyList',companyRes.company)
+        } else {
+          console.log("API returned false status, something went wrong");
+          Alpine.store("loading", false);
+          Alpine.store("appLoading", true);
+          Alpine.store("appAlert").show(
+            "Something went wrong",
+            "Failed loading company information. Please try again",
+            "Cancel",
+            "Try again",
+            "green",
+            false,
+            function () {
+              location.reload();
+            }
+          );
+            return;
+        }
+      } catch (error) {
+        //@TOOO report this
+        console.log("Error fetching company data");
+        console.log(error);
+        Alpine.store("loading", false);
+        Alpine.store("appLoading", true);
+        Alpine.store("appAlert").show(
+          "Something went wrong",
+          "Failed loading company information. Please try again",
+          "Cancel",
+          "Try again",
+          "green",
+          false,
+          function () {
+            location.reload();
+          }
+        );
+        return;
+      }
+      break;
     case "company/new":
       console.log(
         "About to load the new company page, initing alpine data model"
