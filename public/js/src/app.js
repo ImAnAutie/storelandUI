@@ -85,7 +85,7 @@ const initKeycloak = async function () {
           selectedCompany.selected = true;
           Alpine.store("appCompany", selectedCompany);
           Alpine.store("appLogo", selectedCompany.logo);
-        } else {
+        } else {  
           console.log("API returned false status, treating as non assigned");
           delete localStorage.selectedCompanyId;
           location.reload();
@@ -128,7 +128,7 @@ const initKeycloak = async function () {
         const companyRes = await companyReq.json();
         console.table(companyRes);
         if (companyRes.status) {
-          if (companyRes.company) {
+          if (companyRes.company.length) {
             console.log(`Auto selecting company: ${companyRes.company[0]._id}`);
             Alpine.store("switchCompany")(companyRes.company[0]._id);
             location.reload();
