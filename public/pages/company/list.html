@@ -1,0 +1,72 @@
+<!-- PAGE -->
+
+            <div class="bg-gray-800 pt-3">
+                <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+                    <h3 class="font-bold pl-2">My companies</h3>
+                </div>
+            </div>
+
+
+
+<form x-data @submit.prevent="$store.pageCompanyNew.formSubmit">
+<div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
+<label class="block">
+  <input x-data x-bind:class="{ 'border-red-700' : !$store.pageCompanyNew.fieldValidations.name}" x-on:change="$store.pageCompanyNew.validateField('name');" x-model="$store.pageCompanyNew.name" class="form-input mt-1 block w-full" placeholder="My Company Co" />
+  
+</label>
+
+<label
+  class="
+    flex flex-col
+    items-center
+    px-4
+    py-6
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-purple-600 hover:text-white
+    text-purple-600
+    ease-linear
+    transition-all
+    duration-150
+  "
+>
+  <i class="fas fa-cloud-upload-alt fa-3x"></i>
+  <span class="mt-2 text-base leading-normal">Upload logo</span>
+  <input x-ref="file" @change="$store.pageCompanyNew.logo = await $store.utilityFunctions.fileToDataUrl($refs.file.files[0])" type="file" class="hidden" />
+</label>
+<img x-data x-show="$store.pageCompanyNew.logo" x-bind:src="$store.pageCompanyNew.logo" class="h-24 w-24" />
+
+<div class="flex mt-6">
+  <label class="flex items-center">
+    <input x-data x-model="$store.pageCompanyNew.acceptedTerms" type="checkbox" class="form-checkbox" />
+<!-- @TODO fill in terms link -->
+    <span class="ml-2"
+      >I agree to the <button type="button" @click.stop="alert('@TODO fill in terms link here');  " class="underline">terms of service</button></span
+    >
+  </label>
+</div>
+<button type="submit"   class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-plus"></i> Create
+</button>
+</div>
+</form>

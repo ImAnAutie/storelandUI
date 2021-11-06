@@ -226,6 +226,13 @@ router.on({
       Alpine.store("loadPage")("index");
     },
   },
+  "/company": {
+    as: "company.list",
+    uses: function () {
+      console.log("I am on the list company page");
+      Alpine.store("loadPage")("company/list");
+    },
+  },
   "/company/new": {
     as: "company.new",
     uses: function () {
