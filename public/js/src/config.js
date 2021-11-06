@@ -5,7 +5,9 @@ export function config (key) {
     // (see github.com/OkoWsc/ParkPlanrFirebase CI config for info
     configStore.version = '{{APP_VERSION_HERE}}_1501'
     // END OF RANTY WARNING NOTICE
-  
+
+    configStore.storelandCORE = 'https://storelandapi.badgetracker.app'
+
     if (!key) {
       return configStore
     }
