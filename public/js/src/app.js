@@ -244,7 +244,14 @@ router.on({
     as: "company",
     uses: function (params) {
       console.log("I am on the company page");
-      Alpine.store("loadPage")("company/company");
+      Alpine.store("loadPage")("company/company",params);
+    },
+  },
+  "/company/:companyId/edit": {
+    as: "company.edit",
+    uses: function (params) {
+      console.log("I am on the company edit page");
+      Alpine.store("loadPage")("company/edit",params);
     },
   },
 });
@@ -255,6 +262,9 @@ router.notFound(function () {
 });
 
 Alpine.store("utilityFunctions", {
+  navigate: function(route,params) {
+    router.navigate(router.generate(route,params));
+  },
   isEven: function isEven(value) {
     if (value%2 == 0)
       return true;
@@ -347,15 +357,355 @@ Alpine.store("loadFragment", async function (fragment) {
     return "<!-- 404 on fragment load -->";
   }
 });
-Alpine.store("loadPage", async function (page) {
+Alpine.store("loadPage", async function (page,params) {
   Alpine.store("appLoading", false);
   Alpine.store("loading", true);
   console.log(`Loading page: ${page}`);
   const response = await fetch(`/pages/${page}.html`);
   console.log("Got response");
   switch (page) {
+    case "company/edit":
+      console.log("About to load the company edit page, initing alpine data model");
+      Alpine.store("selectedPage","company");
+      console.log(params);
+      if (params.companyId == "selected") {
+        params.companyId = localStorage.selectedCompanyId;
+        router.navigate(router.generate("company.edit",params));
+        return;
+      }
+
+      try {
+        await keycloak.updateToken(30);
+        const companyReq = await fetch(
+          `${config("storelandCORE")}/company/${params.companyId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${keycloak.token}`,
+            },
+            body: null,
+          }
+        );
+        console.log("Got response");
+        const companyRes = await companyReq.json();
+        console.table(companyRes);
+        if (companyRes.status) {
+          const company = companyRes.company;
+          Object.assign(company, {
+          fieldValidations: {
+            name: true,
+            logo: true,
+          },
+          validateField: function (fieldName) {
+            const pageCompanyEdit = Alpine.store("pageCompanyEdit");
+            switch (fieldName) {
+              case "name":
+                pageCompanyEdit.fieldValidations.name = iodine.isValid(
+                  pageCompanyEdit.name,
+                  ["required"]
+                );
+                break;
+            }
+          },
+          formSubmitError: function (title, message) {
+            Alpine.store("appAlert").show(
+              title,
+              message,
+              "Cancel",
+              "Ok",
+              "gray",
+              false,
+              function () {
+                Alpine.store("appAlert").hide();
+              }
+            );
+          },
+          formSubmit: async function () {
+            console.log("Validating new company data");
+            const pageCompanyEdit = Alpine.store("pageCompanyEdit");
+            if (!iodine.isValid(pageCompanyEdit.name, ["required"])) {
+              return pageCompanyEdit.formSubmitError(
+                "Company name required",
+                "Please enter a company name"
+              );
+            }
+            if (!iodine.isValid(pageCompanyEdit.logo, ["required"])) {
+              return pageCompanyEdit.formSubmitError(
+                "Company logo required",
+                "Please upload a logo for your company"
+              );
+            }
+  
+            const editCompanyData = {
+              name: pageCompanyEdit.name,
+              logo: pageCompanyEdit.logo,
+            };
+            console.log("Submtting company edit");
+            console.table(editCompanyData);
+            Alpine.store("loading", true);
+            try {
+              await keycloak.updateToken(30);
+              const editCompanyReq = await fetch(
+                `${config("storelandCORE")}/company/${pageCompanyEdit._id}`,
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${keycloak.token}`,
+                  },
+                  body: JSON.stringify(editCompanyData),
+                }
+              );
+              console.log("Got response");
+              const editCompanyRes = await editCompanyReq.json();
+              console.table(editCompanyRes);
+              if (editCompanyRes.status) {
+                console.log("Successfully edited company");
+                //@todo some sort of toast?
+                const company = editCompanyRes.company;
+                if (company._id == Alpine.store('appCompany')._id) {
+                  console.log("Updating local company data");
+                  company.selected = true;
+                  Alpine.store('appCompany', company);
+                  Alpine.store('appLogo', company.logo);
+                }
+                router.navigate(router.generate("company", {
+                  companyId: company._id,
+                }));
+              } else {
+                console.log("API returned false status");
+                Alpine.store("loading", false);
+                Alpine.store("appAlert").show(
+                  "Something went wrong",
+                  editCompanyRes.message,
+                  "Cancel",
+                  "Try again",
+                  "green",
+                  true,
+                  function () {
+                    Alpine.store("appAlert").visible = false;
+                    Alpine.store("pageCompanyEdit").formSubmit();
+                  }
+                );
+                return;
+              }
+            } catch (error) {
+              //@TOOO report this
+              console.log("Error editing company");
+              console.log(error);
+              Alpine.store("loading", false);
+              Alpine.store("appAlert").show(
+                "Something went wrong",
+                "A network error occured when editing this company",
+                "Cancel",
+                "Try again",
+                "green",
+                true,
+                function () {
+                  Alpine.store("appAlert").visible = false;
+                  Alpine.store("pageCompanyEdit").formSubmit();
+                }
+              );
+            }
+          }
+        });
+
+        company.deleteConfirm = {
+          visible: false,
+          name: "",
+          confirm: async function() {
+            const pageCompanyEdit = Alpine.store('pageCompanyEdit');
+            if (Alpine.store("pageCompanyEdit").deleteConfirm.name == Alpine.store("pageCompanyEdit").name) {
+              console.log("Deleting company now it's confirmed");
+              Alpine.store("pageCompanyEdit").deleteConfirm.visible=false;
+              Alpine.store('loading',true);
+              try {
+                await keycloak.updateToken(30);
+                const deleteCompanyReq = await fetch(
+                  `${config("storelandCORE")}/company/${pageCompanyEdit._id}`,
+                  {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${keycloak.token}`,
+                    },
+                    body: null,
+                  }
+                );
+                console.log("Got response");
+                const deleteCompanyRes = await deleteCompanyReq.json();
+                console.table(deleteCompanyRes);
+                if (deleteCompanyRes.status) {
+                  console.log("Successfully deleted company");
+                  if (Alpine.store("pageCompanyEdit")._id == localStorage.selectedCompanyId) {
+                    console.log("Currently selected company deleted, clearing selection");
+                    delete(localStorage.selectedCompanyId);
+                    location.href = "/company";
+                  } else {
+                    router.navigate(router.generate("company.list"));
+                  }
+                } else {
+                  console.log("API returned false status");
+                  Alpine.store("loading", false);
+                  Alpine.store("appAlert").show(
+                    "Something went wrong",
+                    deleteCompanyRes.message,
+                    "Cancel",
+                    "Try again",
+                    "green",
+                    true,
+                    function () {
+                      Alpine.store("appAlert").visible = false;
+                      Alpine.store("pageCompanyEdit").deleteConfirm.confirm();
+                    }
+                  );
+                  return;
+                }
+              } catch (error) {
+                //@TOOO report this
+                console.log("Error deleting company");
+                console.log(error);
+                Alpine.store("loading", false);
+                Alpine.store("appAlert").show(
+                  "Something went wrong",
+                  "A network error occured when deleting this company",
+                  "Cancel",
+                  "Try again",
+                  "green",
+                  true,
+                  function () {
+                    Alpine.store("appAlert").visible = false;
+                    Alpine.store("pageCompanyEdit").deleteConfirm.confirm();
+                  }
+                );
+              }
+            }
+            
+          }
+        };
+        company.delete = function() {
+          Alpine.store("appAlert").show(
+            "Are you sure?",
+            "Deleting this company will delete all brands, sales channels, orders etc.. for the company. This CANNOT be undone.",
+            "Cancel",
+            "Yes, delete this company",
+            "red",
+            true,
+            function () {
+              Alpine.store('appAlert').hide();
+              Alpine.store("pageCompanyEdit").deleteConfirm.name="";
+              Alpine.store("pageCompanyEdit").deleteConfirm.visible=true;
+            }
+          );
+        }
+          Alpine.store('pageCompanyEdit',company)
+        } else {
+          console.log("API returned false status, something went wrong");
+          Alpine.store("loading", false);
+          Alpine.store("appLoading", true);
+          Alpine.store("appAlert").show(
+            "Something went wrong",
+            "Failed loading company information. Please try again",
+            "Cancel",
+            "Try again",
+            "green",
+            false,
+            function () {
+              location.reload();
+            }
+          );
+            return;
+        }
+      } catch (error) {
+        //@TOOO report this
+        console.log("Error fetching company data");
+        console.log(error);
+        Alpine.store("loading", false);
+        Alpine.store("appLoading", true);
+        Alpine.store("appAlert").show(
+          "Something went wrong",
+          "Failed loading company information. Please try again",
+          "Cancel",
+          "Try again",
+          "green",
+          false,
+          function () {
+            location.reload();
+          }
+        );
+        return;
+      }
+      break;
+    case "company/company":
+      console.log("About to load the company company page, initing alpine data model");
+      Alpine.store("selectedPage","company");
+      console.log(params);
+      if (params.companyId == "selected") {
+        params.companyId = localStorage.selectedCompanyId;
+        router.navigate(router.generate("company",params));
+        return;
+      }
+
+      try {
+        await keycloak.updateToken(30);
+        const companyReq = await fetch(
+          `${config("storelandCORE")}/company/${params.companyId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${keycloak.token}`,
+            },
+            body: null,
+          }
+        );
+        console.log("Got response");
+        const companyRes = await companyReq.json();
+        console.table(companyRes);
+        if (companyRes.status) {
+          const company = companyRes.company;
+          Alpine.store('pageCompany',company)
+        } else {
+          console.log("API returned false status, something went wrong");
+          Alpine.store("loading", false);
+          Alpine.store("appLoading", true);
+          Alpine.store("appAlert").show(
+            "Something went wrong",
+            "Failed loading company information. Please try again",
+            "Cancel",
+            "Try again",
+            "green",
+            false,
+            function () {
+              location.reload();
+            }
+          );
+            return;
+        }
+      } catch (error) {
+        //@TOOO report this
+        console.log("Error fetching company data");
+        console.log(error);
+        Alpine.store("loading", false);
+        Alpine.store("appLoading", true);
+        Alpine.store("appAlert").show(
+          "Something went wrong",
+          "Failed loading company information. Please try again",
+          "Cancel",
+          "Try again",
+          "green",
+          false,
+          function () {
+            location.reload();
+          }
+        );
+        return;
+      }
+      break;
     case "company/list":
       console.log("About to load the company list page, initing alpine data model");
+      Alpine.store("selectedPage","company");
       try {
         await keycloak.updateToken(30);
         const companyReq = await fetch(
@@ -415,6 +765,7 @@ Alpine.store("loadPage", async function (page) {
       console.log(
         "About to load the new company page, initing alpine data model"
       );
+      Alpine.store("selectedPage","company");
       Alpine.store("pageCompanyNew", {
         name: "",
         logo: "",
@@ -543,7 +894,9 @@ Alpine.store("loadPage", async function (page) {
   const isPage = pageHtml.startsWith('<!-- PAGE -->')
   if (isPage) {
     Alpine.store("mainPage", pageHtml);
-    router.updatePageLinks();
+    setTimeout(function() {
+      router.updatePageLinks();
+    }, 25)
   } else { 
     load404();
   }

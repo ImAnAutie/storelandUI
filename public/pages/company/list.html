@@ -3,6 +3,31 @@
             <div class="bg-gray-800 pt-3">
                 <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
                     <h3 class="font-bold pl-2">My companies</h3>
+                    <a data-navigo href="/company/new"
+  class="
+    bg-purple-500
+    text-white
+    active:bg-purple-600
+    font-bold
+    uppercase
+    text-xs
+    px-4
+    py-2
+    rounded
+    shadow
+    hover:shadow-md
+    outline-none
+    focus:outline-none
+    mr-1
+    mb-1
+    ease-linear
+    transition-all
+    duration-150
+  "
+  type="button"
+>
+  <i class="fas fa-plus"></i> New company
+                </a>
                 </div>
             </div>
 
@@ -61,7 +86,9 @@
                           <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                               <div class="ml-4">
-                                <div x-data x-text="company.name" class="text-sm font-medium text-gray-900"></div>
+                                <div x-data 
+                                x-on:click="
+router.navigate(router.generate('company',{companyId  :company._id}));" x-text="company.name" class="text-sm font-medium text-gray-900"></div>
                               </div>
                             </div>
                           </td>
