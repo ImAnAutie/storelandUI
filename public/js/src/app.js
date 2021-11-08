@@ -101,10 +101,7 @@ const initApp = async () => {
 };
 
 function load404() {
-  //@todo a nicer 404 page
-  Alpine.store("mainPage", "4 oh 4");
-  //To set sidebar colors properly
-  Alpine.store("selectedPage", "");
+  Alpine.store("selectedPage", "404");
 }
 
 const root = `${window.location.protocol}//${
