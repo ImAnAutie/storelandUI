@@ -3,11 +3,11 @@ export function config(key) {
   // DO NOT CHANGE THIS
   // It will be automatically set when deployed via CI
   // (see github.com/OkoWsc/ParkPlanrFirebase CI config for info
-  configStore.version = "{{APP_VERSION_HERE}}_1501";
+  configStore.version = "{{APP_VERSION_HERE}}";
   // END OF RANTY WARNING NOTICE
 
+  configStore.environment = "DEV";
   configStore.storelandCORE = "https://storelandapi.badgetracker.app";
-
   configStore.keycloakAuthUrl = "https://keycloak.dicsolve.com/auth";
   configStore.keycloakRealm = "storeland";
   configStore.keycloakClientId = "storelandUI";

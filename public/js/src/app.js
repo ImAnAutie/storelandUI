@@ -5,8 +5,8 @@ const keycloak = getKeycloak();
 const Navigo = require("navigo");
 
 import Alpine from "alpinejs";
-import { FOLLOWED_BY_SLASH_REGEXP } from "navigo";
 window.Alpine = Alpine;
+Alpine.store("config", config);
 
 const {
   loadCompanyEdit,
