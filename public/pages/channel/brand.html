@@ -1,0 +1,42 @@
+<!-- PAGE -->
+
+            <div class="bg-gray-800 pt-3">
+                <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+                    <h3 x-text="$store.pageBrand.name" class="font-bold pl-2"></h3>
+                    <button @click="router.navigate(router.generate('brand.edit',{brandId: router.lastRouteResolved().params.brandId}));"
+                    class="
+                      bg-purple-500
+                      text-white
+                      active:bg-purple-600
+                      font-bold
+                      uppercase
+                      text-xs
+                      px-4
+                      py-2
+                      rounded
+                      shadow
+                      hover:shadow-md
+                      outline-none
+                      focus:outline-none
+                      mr-1
+                      mb-1
+                      ease-linear
+                      transition-all
+                      duration-150
+                    "
+                    type="button"
+                  >
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                </div>
+            </div>
+
+
+
+            <div class="flex flex-col">
+              <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                  @todo brand specific dashboard.
+                </div>
+              </div>
+            </div>

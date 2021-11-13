@@ -7,6 +7,9 @@ const Navigo = require("navigo");
 import Alpine from "alpinejs";
 window.Alpine = Alpine;
 Alpine.store("config", config);
+
+const { loadChannelNew } = require("./channel.js");
+
 const {
   loadBrandNew,
   loadBrandList,
@@ -183,6 +186,35 @@ router.on({
       Alpine.store("loadPage")("brand/edit", params);
     },
   },
+
+  "/channel": {
+    as: "channel.list",
+    uses: function () {
+      console.log("I am on the list channel page");
+      Alpine.store("loadPage")("channel/list");
+    },
+  },
+  "/channel/new": {
+    as: "channel.new",
+    uses: function () {
+      console.log("I am on the new channel page");
+      Alpine.store("loadPage")("channel/new");
+    },
+  },
+  "/channel/:channelId": {
+    as: "channel",
+    uses: function (params) {
+      console.log("I am on the channel page");
+      Alpine.store("loadPage")("channel/channel", params);
+    },
+  },
+  "/channel/:channelId/edit": {
+    as: "channel.edit",
+    uses: function (params) {
+      console.log("I am on the channel edit page");
+      Alpine.store("loadPage")("channel/edit", params);
+    },
+  },
 });
 
 router.notFound(function () {
@@ -342,6 +374,8 @@ Alpine.store("loadPage", async function (page, params) {
     case "brand/new":
       await loadBrandNew(params);
       break;
+    case "channel/new":
+      await loadChannelNew(params);
   }
 
   const pageHtml = await response.text();

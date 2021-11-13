@@ -1,0 +1,66 @@
+<!-- PAGE -->
+
+            <div class="bg-gray-800 pt-3">
+                <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+                    <h3 class="font-bold pl-2">New channel for <span x-text="$store.appCompany.name"></span></h3>
+                </div>
+            </div>
+
+
+
+<form x-data @submit.prevent="$store.pageChannelNew.formSubmit">
+<div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
+<label class="block">
+  <input x-data 
+  x-bind:placeholder="`${$store.appCompany.name} channel`" 
+  x-bind:class="{ 'border-red-700' : !$store.pageChannelNew.fieldValidations.name}" x-on:change="$store.pageChannelNew.validateField('name');" x-model="$store.pageChannelNew.name" class="form-input mt-1 block w-full" />
+  
+</label>
+
+<label class="block text-left" style="max-width: 400px">
+  <select  
+  
+  x-bind:class="{ 'border-red-700' : !$store.pageChannelNew.fieldValidations.brand}"
+  x-on:change="$store.pageChannelNew.brand = $event.target.value;
+      $store.pageChannelNew.validateField('brand');"
+  class="form-select block w-full mt-1">
+    <option disabled selected>Select brand</option>
+    <template x-for="brand in $store.pageChannelNew.brandList">
+      <option x-bind:value="brand._id" x-text="brand.name"></option>
+  </template>
+  </select>
+</label>
+
+<label class="block text-left" style="max-width: 400px">
+  <select
+  x-bind:class="{ 'border-red-700' : !$store.pageChannelNew.fieldValidations.type}"
+  x-on:change="$store.pageChannelNew.type = $event.target.value; $store.pageChannelNew.validateField('type');"
+  
+  class="form-select block w-full mt-1">
+    <option value="" disabled selected>Select channel type</option>
+    <template x-for="channelType in ['web']">
+      <option x-text="channelType"></option>
+  </template>
+  </select>
+</label>
+
+<button type="submit"   class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-plus"></i> Create
+</button>
+</div>
+</form>
