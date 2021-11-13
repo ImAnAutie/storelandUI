@@ -7,6 +7,12 @@ const Navigo = require("navigo");
 import Alpine from "alpinejs";
 window.Alpine = Alpine;
 Alpine.store("config", config);
+const {
+  loadBrandNew,
+  loadBrandList,
+  loadBrandPage,
+  loadBrandEdit,
+} = require("./brand.js");
 
 const {
   loadCompanyEdit,
@@ -146,6 +152,35 @@ router.on({
     uses: function (params) {
       console.log("I am on the company edit page");
       Alpine.store("loadPage")("company/edit", params);
+    },
+  },
+
+  "/brand": {
+    as: "brand.list",
+    uses: function () {
+      console.log("I am on the list brand page");
+      Alpine.store("loadPage")("brand/list");
+    },
+  },
+  "/brand/new": {
+    as: "brand.new",
+    uses: function () {
+      console.log("I am on the new brand page");
+      Alpine.store("loadPage")("brand/new");
+    },
+  },
+  "/brand/:brandId": {
+    as: "brand",
+    uses: function (params) {
+      console.log("I am on the brand page");
+      Alpine.store("loadPage")("brand/brand", params);
+    },
+  },
+  "/brand/:brandId/edit": {
+    as: "brand.edit",
+    uses: function (params) {
+      console.log("I am on the brand edit page");
+      Alpine.store("loadPage")("brand/edit", params);
     },
   },
 });
@@ -294,6 +329,18 @@ Alpine.store("loadPage", async function (page, params) {
       break;
     case "company/new":
       await loadCompanyNew(params);
+      break;
+    case "brand/edit":
+      await loadBrandEdit(params);
+      break;
+    case "brand/brand":
+      await loadBrandPage(params);
+      break;
+    case "brand/list":
+      await loadBrandList(params);
+      break;
+    case "brand/new":
+      await loadBrandNew(params);
       break;
   }
 
