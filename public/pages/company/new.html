@@ -47,7 +47,7 @@
     <input x-data x-model="$store.pageCompanyNew.acceptedTerms" type="checkbox" class="form-checkbox" />
 <!-- @TODO fill in terms link -->
     <span class="ml-2"
-      >I agree to the <button type="button" @click.stop="alert('@TODO fill in terms link here');  " class="underline">terms of service</button></span
+      >I agree to the <button type="button" @click.stop="window.open('/terms');" class="underline">terms of service</button></span
     >
   </label>
 </div>

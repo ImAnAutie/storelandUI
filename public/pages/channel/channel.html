@@ -2,8 +2,8 @@
 
             <div class="bg-gray-800 pt-3">
                 <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
-                    <h3 x-text="$store.pageBrand.name" class="font-bold pl-2"></h3>
-                    <button @click="router.navigate(router.generate('brand.edit',{brandId: router.lastRouteResolved().params.brandId}));"
+                    <h3 x-text="$store.pageChannel.name" class="font-bold pl-2"></h3>
+                    <button @click="router.navigate(router.generate('channel.edit',{brandId: router.lastRouteResolved().params.brandId, channelId: router.lastRouteResolved().params.channelId}));"
                     class="
                       bg-purple-500
                       text-white
@@ -36,7 +36,10 @@
             <div class="flex flex-col">
               <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                  @todo brand specific dashboard.
-                </div>
+
+                  <span>ID: </span><span x-text="$store.pageChannel._id" title="Use this ID to configure your integration with storelandCORE">618fef78a50bd3414e73c5aa</span>
+              
+              
+                              </div>
               </div>
             </div>

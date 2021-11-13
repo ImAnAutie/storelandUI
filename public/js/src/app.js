@@ -8,7 +8,11 @@ import Alpine from "alpinejs";
 window.Alpine = Alpine;
 Alpine.store("config", config);
 
-const { loadChannelNew } = require("./channel.js");
+const {
+  loadChannelNew,
+  loadChannelPage,
+  loadChannelEdit,
+} = require("./channel.js");
 
 const {
   loadBrandNew,
@@ -27,7 +31,6 @@ const {
 
 const initKeycloak = async function () {
   console.log("initKeycloak");
-  //@todo call loadKeycloak
 
   const authenticated = await keycloak.init({
     onLoad: "check-sso",
@@ -201,14 +204,14 @@ router.on({
       Alpine.store("loadPage")("channel/new");
     },
   },
-  "/channel/:channelId": {
+  "/brand/:brandId/channel/:channelId": {
     as: "channel",
     uses: function (params) {
       console.log("I am on the channel page");
       Alpine.store("loadPage")("channel/channel", params);
     },
   },
-  "/channel/:channelId/edit": {
+  "/brand/:brandId/channel/:channelId/edit": {
     as: "channel.edit",
     uses: function (params) {
       console.log("I am on the channel edit page");
@@ -374,8 +377,16 @@ Alpine.store("loadPage", async function (page, params) {
     case "brand/new":
       await loadBrandNew(params);
       break;
+
     case "channel/new":
       await loadChannelNew(params);
+      break;
+    case "channel/channel":
+      await loadChannelPage(params);
+      break;
+    case "channel/edit":
+      await loadChannelEdit(params);
+      break;
   }
 
   const pageHtml = await response.text();
