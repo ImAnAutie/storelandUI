@@ -2,7 +2,7 @@
 
             <div class="bg-gray-800 pt-3">
                 <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
-                    <h3 class="font-bold pl-2"><span x-data x-text="$store.appCompany.name"></span> - channels</h3>
+                    <h3 class="font-bold pl-2"><span x-data x-text="$store.appCompany.name"></span> - Channels</h3>
                     <a data-navigo href="/channel/new"
   class="
     bg-purple-500
@@ -99,7 +99,7 @@
                             <div class="flex items-center">
                               <div class="ml-4">
                                 <div x-data 
-                                x-on:click="router.navigate(router.generate('channel',{channelId  :channel._id}));" x-text="channel.name" class="cursor-pointer text-sm font-medium text-gray-900"></div>
+                                x-on:click="router.navigate(router.generate('channel',{brandId: channel.brand._id, channelId  :channel._id}));" x-text="channel.name" class="cursor-pointer text-sm font-medium text-gray-900"></div>
                               </div>
                             </div>
                           </td>
@@ -107,7 +107,7 @@
                             <div class="flex items-center">
                               <div class="ml-4">
                                 <div x-data 
-                                x-on:click="router.navigate(router.generate('channel',{channelId  :channel._id}));" x-text="channel.brand.name" class="cursor-pointer text-sm font-medium text-gray-900"></div>
+                                x-on:click="router.navigate(router.generate('channel',{brandId: channel.brand._id, channelId  :channel._id}));" x-text="channel.brand.name" class="cursor-pointer text-sm font-medium text-gray-900"></div>
                               </div>
                             </div>
                           </td>
@@ -115,7 +115,7 @@
                             <div class="flex items-center">
                               <div class="ml-4">
                                 <div x-data 
-                                x-on:click="router.navigate(router.generate('channel',{channelId  :channel._id}));" x-text="channel.brand.type" class="cursor-pointer text-sm font-medium text-gray-900"></div>
+                                x-on:click="router.navigate(router.generate('channel',{brandId: channel.brand._id, channelId  :channel._id}));" x-text="channel.type" class="cursor-pointer text-sm font-medium text-gray-900"></div>
                               </div>
                             </div>
                           </td>

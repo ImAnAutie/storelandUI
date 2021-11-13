@@ -615,4 +615,152 @@ const loadChannelPage = async function (params) {
     return;
   }
 };
-export { loadChannelNew, loadChannelPage, loadChannelEdit };
+
+const loadChannelList = async function () {
+  console.log("About to load the channel list page, initing alpine data model");
+  Alpine.store("selectedPage", "channel");
+
+  // Load the brand list
+  let brandList = [];
+  try {
+    const brandReq = await fetch(
+      `${config("storelandCORE")}/company/${
+        Alpine.store("appCompany")._id
+      }/brand`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+        body: null,
+      }
+    );
+    console.log("Got response");
+    const brandRes = await brandReq.json();
+    console.table(brandRes);
+    if (brandRes.status) {
+      brandList = brandRes.brand;
+      console.log(brandList);
+      if (!brandList.length) {
+        return Alpine.store("appAlert").show(
+          "Missing brand",
+          "No brands found.",
+          "Cancel",
+          "Retry",
+          "green",
+          false,
+          function () {
+            location.href = "/brand";
+          }
+        );
+      }
+    } else {
+      console.log("API returned false status, something went wrong");
+      Alpine.store("loading", false);
+      Alpine.store("appLoading", true);
+      return Alpine.store("appAlert").show(
+        "Something went wrong",
+        "Failed loading brand information. Please try again",
+        "Cancel",
+        "Try again",
+        "green",
+        false,
+        function () {
+          location.reload();
+        }
+      );
+    }
+  } catch (error) {
+    //@TOOO report this
+    console.log("Error fetching brand data");
+    console.log(error);
+    Alpine.store("loading", false);
+    Alpine.store("appLoading", true);
+    return Alpine.store("appAlert").show(
+      "Something went wrong",
+      "Failed loading brand information. Please try again",
+      "Cancel",
+      "Try again",
+      "green",
+      false,
+      function () {
+        location.reload();
+      }
+    );
+  }
+
+  try {
+    await keycloak.updateToken(30);
+    const channelReq = await fetch(
+      `${config("storelandCORE")}/company/${
+        Alpine.store("appCompany")._id
+      }/channel`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+        body: null,
+      }
+    );
+    console.log("Got response");
+    const channelRes = await channelReq.json();
+    console.table(channelRes);
+    if (channelRes.status) {
+      const channelList = channelRes.channel;
+
+      for (const index in channelList) {
+        const channel = channelList[index];
+        const brand = brandList.find((i) => i._id == channel.brand);
+        if (brand) {
+          channel.brand = brand;
+        } else {
+          channel.brand = {
+            name: "**Invalid brand**",
+          };
+        }
+
+        channelList[index] = channel;
+      }
+      Alpine.store("pageChannelList", channelList);
+    } else {
+      console.log("API returned false status, something went wrong");
+      Alpine.store("loading", false);
+      Alpine.store("appLoading", true);
+      Alpine.store("appAlert").show(
+        "Something went wrong",
+        "Failed loading channel information. Please try again",
+        "Cancel",
+        "Try again",
+        "green",
+        false,
+        function () {
+          location.reload();
+        }
+      );
+      return;
+    }
+  } catch (error) {
+    //@TOOO report this
+    console.log("Error fetching channel data");
+    console.log(error);
+    Alpine.store("loading", false);
+    Alpine.store("appLoading", true);
+    Alpine.store("appAlert").show(
+      "Something went wrong",
+      "Failed loading channel information. Please try again",
+      "Cancel",
+      "Try again",
+      "green",
+      false,
+      function () {
+        location.reload();
+      }
+    );
+    return;
+  }
+};
+
+export { loadChannelNew, loadChannelPage, loadChannelEdit, loadChannelList };

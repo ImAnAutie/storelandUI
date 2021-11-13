@@ -12,6 +12,7 @@ const {
   loadChannelNew,
   loadChannelPage,
   loadChannelEdit,
+  loadChannelList,
 } = require("./channel.js");
 
 const {
@@ -378,6 +379,9 @@ Alpine.store("loadPage", async function (page, params) {
       await loadBrandNew(params);
       break;
 
+    case "channel/list":
+      await loadChannelList(params);
+      break;
     case "channel/new":
       await loadChannelNew(params);
       break;
