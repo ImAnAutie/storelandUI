@@ -1,6 +1,4 @@
-import { config } from "./config.js";
-import { getKeycloak } from "./keycloak.js";
-const keycloak = getKeycloak();
+import { makeStorelandRequest } from "./storelandCORE.js";
 
 import { Iodine } from "@kingshott/iodine";
 const iodine = new Iodine();
@@ -16,20 +14,10 @@ const loadCompanyEdit = async function (params) {
   }
 
   try {
-    await keycloak.updateToken(30);
-    const companyReq = await fetch(
-      `${config("storelandCORE")}/company/${params.companyId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const companyRes = await makeStorelandRequest(
+      `company/${params.companyId}`,
+      "GET"
     );
-    console.log("Got response");
-    const companyRes = await companyReq.json();
     console.table(companyRes);
     if (companyRes.status) {
       const company = companyRes.company;
@@ -86,20 +74,11 @@ const loadCompanyEdit = async function (params) {
           console.table(editCompanyData);
           Alpine.store("loading", true);
           try {
-            await keycloak.updateToken(30);
-            const editCompanyReq = await fetch(
-              `${config("storelandCORE")}/company/${pageCompanyEdit._id}`,
-              {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${keycloak.token}`,
-                },
-                body: JSON.stringify(editCompanyData),
-              }
+            const editCompanyRes = await makeStorelandRequest(
+              `company/${params.companyId}`,
+              "PATCH",
+              editCompanyData
             );
-            console.log("Got response");
-            const editCompanyRes = await editCompanyReq.json();
             console.table(editCompanyRes);
             if (editCompanyRes.status) {
               console.log("Successfully edited company");
@@ -167,20 +146,10 @@ const loadCompanyEdit = async function (params) {
             Alpine.store("pageCompanyEdit").deleteConfirm.visible = false;
             Alpine.store("loading", true);
             try {
-              await keycloak.updateToken(30);
-              const deleteCompanyReq = await fetch(
-                `${config("storelandCORE")}/company/${pageCompanyEdit._id}`,
-                {
-                  method: "DELETE",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${keycloak.token}`,
-                  },
-                  body: null,
-                }
+              const deleteCompanyRes = await makeStorelandRequest(
+                `company/${params.companyId}`,
+                "DELETE"
               );
-              console.log("Got response");
-              const deleteCompanyRes = await deleteCompanyReq.json();
               console.table(deleteCompanyRes);
               if (deleteCompanyRes.status) {
                 console.log("Successfully deleted company");
@@ -301,20 +270,10 @@ const loadCompanyPage = async function (params) {
   }
 
   try {
-    await keycloak.updateToken(30);
-    const companyReq = await fetch(
-      `${config("storelandCORE")}/company/${params.companyId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const companyRes = await makeStorelandRequest(
+      `company/${params.companyId}`,
+      "GET"
     );
-    console.log("Got response");
-    const companyRes = await companyReq.json();
     console.table(companyRes);
     if (companyRes.status) {
       const company = companyRes.company;
@@ -361,17 +320,7 @@ const loadCompanyList = async function () {
   console.log("About to load the company list page, initing alpine data model");
   Alpine.store("selectedPage", "company");
   try {
-    await keycloak.updateToken(30);
-    const companyReq = await fetch(`${config("storelandCORE")}/company/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${keycloak.token}`,
-      },
-      body: null,
-    });
-    console.log("Got response");
-    const companyRes = await companyReq.json();
+    const companyRes = await makeStorelandRequest(`company/`, "GET");
     console.table(companyRes);
     if (companyRes.status) {
       Alpine.store("pageCompanyList", companyRes.company);
@@ -479,20 +428,11 @@ const loadCompanyNew = async function () {
       console.table(newCompanyData);
       Alpine.store("loading", true);
       try {
-        await keycloak.updateToken(30);
-        const newCompanyReq = await fetch(
-          `${config("storelandCORE")}/company`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${keycloak.token}`,
-            },
-            body: JSON.stringify(newCompanyData),
-          }
+        const newCompanyRes = await makeStorelandRequest(
+          `company/`,
+          "POST",
+          newCompanyData
         );
-        console.log("Got response");
-        const newCompanyRes = await newCompanyReq.json();
         console.table(newCompanyRes);
         if (newCompanyRes.status) {
           console.log("Successfully created company");
@@ -543,20 +483,10 @@ const loadUserSelectedCompany = async function () {
   if (localStorage.selectedCompanyId) {
     console.log("User has selected a company");
     try {
-      await keycloak.updateToken(30);
-      const companyReq = await fetch(
-        `${config("storelandCORE")}/company/${localStorage.selectedCompanyId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${keycloak.token}`,
-          },
-          body: null,
-        }
+      const companyRes = await makeStorelandRequest(
+        `company/${localStorage.selectedCompanyId}`,
+        "GET"
       );
-      console.log("Got response");
-      const companyRes = await companyReq.json();
       console.table(companyRes);
       if (companyRes.status) {
         console.log("Successfully selected company");
@@ -592,17 +522,7 @@ const loadUserSelectedCompany = async function () {
     }
   } else {
     try {
-      await keycloak.updateToken(30);
-      const companyReq = await fetch(`${config("storelandCORE")}/company/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      });
-      console.log("Got response");
-      const companyRes = await companyReq.json();
+      const companyRes = await makeStorelandRequest(`company/`, "GET");
       console.table(companyRes);
       if (companyRes.status) {
         if (companyRes.company.length) {

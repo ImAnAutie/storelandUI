@@ -1,6 +1,4 @@
-import { config } from "./config.js";
-import { getKeycloak } from "./keycloak.js";
-const keycloak = getKeycloak();
+import { makeStorelandRequest } from "./storelandCORE.js";
 
 import { Iodine } from "@kingshott/iodine";
 const iodine = new Iodine();
@@ -13,21 +11,10 @@ const loadChannelEdit = async function (params) {
   // Load the brand list
   let brandList = [];
   try {
-    const brandReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const brandRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand`,
+      "GET"
     );
-    console.log("Got response");
-    const brandRes = await brandReq.json();
     console.table(brandRes);
     if (brandRes.status) {
       brandList = brandRes.brand;
@@ -80,22 +67,12 @@ const loadChannelEdit = async function (params) {
   }
 
   try {
-    await keycloak.updateToken(30);
-    const channelReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand/${params.brandId}/channel/${params.channelId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const channelRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand/${
+        params.brandId
+      }/channel/${params.channelId}`,
+      "GET"
     );
-    console.log("Got response");
-    const channelRes = await channelReq.json();
     console.table(channelRes);
     if (channelRes.status) {
       const channel = channelRes.channel;
@@ -146,22 +123,13 @@ const loadChannelEdit = async function (params) {
 
           Alpine.store("loading", true);
           try {
-            await keycloak.updateToken(30);
-            const editChannelReq = await fetch(
-              `${config("storelandCORE")}/company/${
-                Alpine.store("appCompany")._id
-              }/brand/${pageChannelEdit.brand}/channel/${pageChannelEdit._id}`,
-              {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${keycloak.token}`,
-                },
-                body: JSON.stringify(editChannelData),
-              }
+            const editChannelRes = await makeStorelandRequest(
+              `company/${Alpine.store("appCompany")._id}/brand/${
+                pageChannelEdit.brand
+              }/channel/${pageChannelEdit._id}`,
+              "PATCH",
+              editChannelData
             );
-            console.log("Got response");
-            const editChannelRes = await editChannelReq.json();
             console.table(editChannelRes);
             if (editChannelRes.status) {
               console.log("Successfully edited channel");
@@ -224,24 +192,12 @@ const loadChannelEdit = async function (params) {
             Alpine.store("pageChannelEdit").deleteConfirm.visible = false;
             Alpine.store("loading", true);
             try {
-              await keycloak.updateToken(30);
-              const deleteChannelReq = await fetch(
-                `${config("storelandCORE")}/company/${
-                  Alpine.store("appCompany")._id
-                }/brand/${pageChannelEdit.brand}/channel/${
-                  pageChannelEdit._id
-                }`,
-                {
-                  method: "DELETE",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${keycloak.token}`,
-                  },
-                  body: null,
-                }
+              const deleteChannelRes = await makeStorelandRequest(
+                `company/${Alpine.store("appCompany")._id}/brand/${
+                  pageChannelEdit.brand
+                }/channel/${pageChannelEdit._id}`,
+                "DELETE"
               );
-              console.log("Got response");
-              const deleteChannelRes = await deleteChannelReq.json();
               console.table(deleteChannelRes);
               if (deleteChannelRes.status) {
                 console.log("Successfully deleted channel");
@@ -344,21 +300,10 @@ const loadChannelNew = async function () {
   // Load the brand list
   let brandList = [];
   try {
-    const brandReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const brandRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand`,
+      "GET"
     );
-    console.log("Got response");
-    const brandRes = await brandReq.json();
     console.table(brandRes);
     if (brandRes.status) {
       brandList = brandRes.brand;
@@ -487,22 +432,13 @@ const loadChannelNew = async function () {
       console.table(newChannelData);
       Alpine.store("loading", true);
       try {
-        await keycloak.updateToken(30);
-        const newChannelReq = await fetch(
-          `${config("storelandCORE")}/company/${
-            Alpine.store("appCompany")._id
-          }/brand/${pageChannelNew.brand}/channel`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${keycloak.token}`,
-            },
-            body: JSON.stringify(newChannelData),
-          }
+        const newChannelRes = await makeStorelandRequest(
+          `company/${Alpine.store("appCompany")._id}/brand/${
+            pageChannelNew.brand
+          }/channel`,
+          "POST",
+          newChannelData
         );
-        console.log("Got response");
-        const newChannelRes = await newChannelReq.json();
         console.table(newChannelRes);
         if (newChannelRes.status) {
           console.log("Successfully created channel");
@@ -558,22 +494,12 @@ const loadChannelPage = async function (params) {
   Alpine.store("selectedPage", "channel");
 
   try {
-    await keycloak.updateToken(30);
-    const channelReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand/${params.brandId}/channel/${params.channelId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const channelRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand/${
+        params.brandId
+      }/channel/${params.channelId}`,
+      "GET"
     );
-    console.log("Got response");
-    const channelRes = await channelReq.json();
     console.table(channelRes);
     if (channelRes.status) {
       const channel = channelRes.channel;
@@ -623,21 +549,10 @@ const loadChannelList = async function () {
   // Load the brand list
   let brandList = [];
   try {
-    const brandReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const brandRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand`,
+      "GET"
     );
-    console.log("Got response");
-    const brandRes = await brandReq.json();
     console.table(brandRes);
     if (brandRes.status) {
       brandList = brandRes.brand;
@@ -691,22 +606,10 @@ const loadChannelList = async function () {
   }
 
   try {
-    await keycloak.updateToken(30);
-    const channelReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/channel`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const channelRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/channel`,
+      "GET"
     );
-    console.log("Got response");
-    const channelRes = await channelReq.json();
     console.table(channelRes);
     if (channelRes.status) {
       const channelList = channelRes.channel;

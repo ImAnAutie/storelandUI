@@ -1,6 +1,4 @@
-import { config } from "./config.js";
-import { getKeycloak } from "./keycloak.js";
-const keycloak = getKeycloak();
+import { makeStorelandRequest } from "./storelandCORE.js";
 
 import { Iodine } from "@kingshott/iodine";
 const iodine = new Iodine();
@@ -11,22 +9,10 @@ const loadBrandEdit = async function (params) {
   console.log(params);
 
   try {
-    await keycloak.updateToken(30);
-    const brandReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand/${params.brandId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const brandRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand/${params.brandId}`,
+      "GET"
     );
-    console.log("Got response");
-    const brandRes = await brandReq.json();
     console.table(brandRes);
     if (brandRes.status) {
       const brand = brandRes.brand;
@@ -83,22 +69,13 @@ const loadBrandEdit = async function (params) {
           console.table(editBrandData);
           Alpine.store("loading", true);
           try {
-            await keycloak.updateToken(30);
-            const editBrandReq = await fetch(
-              `${config("storelandCORE")}/company/${
-                Alpine.store("appCompany")._id
-              }/brand/${pageBrandEdit._id}`,
-              {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${keycloak.token}`,
-                },
-                body: JSON.stringify(editBrandData),
-              }
+            const editBrandRes = await makeStorelandRequest(
+              `company/${Alpine.store("appCompany")._id}/brand/${
+                pageBrandEdit._id
+              }`,
+              "PATCH",
+              editBrandData
             );
-            console.log("Got response");
-            const editBrandRes = await editBrandReq.json();
             console.table(editBrandRes);
             if (editBrandRes.status) {
               console.log("Successfully edited brand");
@@ -160,22 +137,12 @@ const loadBrandEdit = async function (params) {
             Alpine.store("pageBrandEdit").deleteConfirm.visible = false;
             Alpine.store("loading", true);
             try {
-              await keycloak.updateToken(30);
-              const deleteBrandReq = await fetch(
-                `${config("storelandCORE")}/company/${
-                  Alpine.store("appCompany")._id
-                }/brand/${pageBrandEdit._id}`,
-                {
-                  method: "DELETE",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${keycloak.token}`,
-                  },
-                  body: null,
-                }
+              const deleteBrandRes = await makeStorelandRequest(
+                `company/${Alpine.store("appCompany")._id}/brand/${
+                  pageBrandEdit._id
+                }`,
+                "DELETE"
               );
-              console.log("Got response");
-              const deleteBrandRes = await deleteBrandReq.json();
               console.table(deleteBrandRes);
               if (deleteBrandRes.status) {
                 console.log("Successfully deleted brand");
@@ -277,22 +244,10 @@ const loadBrandPage = async function (params) {
   Alpine.store("selectedPage", "brand");
 
   try {
-    await keycloak.updateToken(30);
-    const brandReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand/${params.brandId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const brandRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand/${params.brandId}`,
+      "GET"
     );
-    console.log("Got response");
-    const brandRes = await brandReq.json();
     console.table(brandRes);
     if (brandRes.status) {
       const brand = brandRes.brand;
@@ -339,22 +294,10 @@ const loadBrandList = async function () {
   console.log("About to load the brand list page, initing alpine data model");
   Alpine.store("selectedPage", "brand");
   try {
-    await keycloak.updateToken(30);
-    const brandReq = await fetch(
-      `${config("storelandCORE")}/company/${
-        Alpine.store("appCompany")._id
-      }/brand`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-        body: null,
-      }
+    const brandRes = await makeStorelandRequest(
+      `company/${Alpine.store("appCompany")._id}/brand`,
+      "GET"
     );
-    console.log("Got response");
-    const brandRes = await brandReq.json();
     console.table(brandRes);
     if (brandRes.status) {
       Alpine.store("pageBrandList", brandRes.brand);
@@ -454,22 +397,11 @@ const loadBrandNew = async function () {
       console.table(newBrandData);
       Alpine.store("loading", true);
       try {
-        await keycloak.updateToken(30);
-        const newBrandReq = await fetch(
-          `${config("storelandCORE")}/company/${
-            Alpine.store("appCompany")._id
-          }/brand`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${keycloak.token}`,
-            },
-            body: JSON.stringify(newBrandData),
-          }
+        const newBrandRes = await makeStorelandRequest(
+          `company/${Alpine.store("appCompany")._id}/brand`,
+          "POST",
+          newBrandData
         );
-        console.log("Got response");
-        const newBrandRes = await newBrandReq.json();
         console.table(newBrandRes);
         if (newBrandRes.status) {
           console.log("Successfully created brand");

@@ -1,5 +1,6 @@
 import { config } from "./config.js";
 import { getKeycloak } from "./keycloak.js";
+import { makeStorelandRequest } from "./storelandCORE.js";
 const keycloak = getKeycloak();
 
 const Navigo = require("navigo");
@@ -46,16 +47,7 @@ const initKeycloak = async function () {
     console.table(userInfo);
     Alpine.store("appUser", userInfo);
 
-    const storelandUserReq = await fetch(`${config("storelandCORE")}/user/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${keycloak.token}`,
-      },
-      body: null,
-    });
-    console.log("Got response");
-    const storelandUserRes = await storelandUserReq.json();
+    const storelandUserRes = await makeStorelandRequest(`user/me`, "GET");
     console.table(storelandUserRes);
     if (!storelandUserRes.status) {
       console.log("Failed to fetch user data from storeland CORE");
@@ -217,6 +209,35 @@ router.on({
     uses: function (params) {
       console.log("I am on the channel edit page");
       Alpine.store("loadPage")("channel/edit", params);
+    },
+  },
+
+  "/item": {
+    as: "item.list",
+    uses: function () {
+      console.log("I am on the items list page");
+      Alpine.store("loadPage")("item/list");
+    },
+  },
+  "/item/new": {
+    as: "item.new",
+    uses: function () {
+      console.log("I am on the new item page");
+      Alpine.store("loadPage")("item/new");
+    },
+  },
+  "/item/:itemId": {
+    as: "item",
+    uses: function (params) {
+      console.log("I am on the item page");
+      Alpine.store("loadPage")("item/item", params);
+    },
+  },
+  "/item/:itemId/edit": {
+    as: "item.edit",
+    uses: function (params) {
+      console.log("I am on the channel edit page");
+      Alpine.store("loadPage")("item/edit", params);
     },
   },
 });

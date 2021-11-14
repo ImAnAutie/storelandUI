@@ -1,40 +1,267 @@
 <!-- FRAGMENT -->
 
-<div class="bg-gray-800 shadow-xl h-16 fixed bottom-0 mt-12 md:relative md:h-screen z-10 w-full md:w-48">
+<div
+  class="
+    bg-gray-800
+    shadow-xl
+    h-16
+    fixed
+    bottom-0
+    mt-12
+    md:relative md:h-screen
+    z-10
+    w-full
+    md:w-48
+  "
+>
+  <div
+    class="
+      md:mt-12 md:w-48 md:fixed md:left-0 md:top-0
+      content-center
+      md:content-start
+      text-left
+      justify-between
+    "
+  >
+    <ul
+      class="
+        list-reset
+        flex flex-row
+        md:flex-col
+        py-0
+        md:py-3
+        px-1
+        md:px-2
+        text-center
+        md:text-left
+      "
+    >
+      <li class="mr-3 flex-1">
+        <a
+          data-navigo
+          href="/"
+          x-bind:class="{ 'border-pink-600' : $store.selectedPage =='index'}"
+          class="
+            block
+            py-1
+            md:py-3
+            pl-1
+            align-middle
+            text-white
+            no-underline
+            hover:text-white
+            border-b-2 border-gray-800
+            hover:border-pink-700
+          "
+        >
+          <i
+            x-bind:class="{ 'text-pink-600' : $store.selectedPage =='index'}"
+            class="fas fa-chart-area pr-0 md:pr-3"
+          ></i
+          ><span
+            class="
+              pb-1
+              md:pb-0
+              text-xs
+              md:text-base
+              text-white
+              md:text-white
+              block
+              md:inline-block
+            "
+            >Home</span
+          >
+        </a>
+      </li>
+      <li class="mr-3 flex-1">
+        <a
+          data-navigo
+          href="/company/selected"
+          x-bind:class="{ 'border-blue-600' : $store.selectedPage =='company'}"
+          class="
+            block
+            py-1
+            md:py-3
+            pl-1
+            align-middle
+            text-white
+            no-underline
+            hover:text-white
+            border-b-2 border-gray-800
+            hover:border-blue-700
+          "
+        >
+          <i
+            x-bind:class="{ 'text-blue-600' : $store.selectedPage =='company'}"
+            class="fas fa-building pr-0 md:pr-3"
+          ></i
+          ><span
+            class="
+              pb-1
+              md:pb-0
+              text-xs
+              md:text-base
+              text-white
+              md:text-white
+              block
+              md:inline-block
+            "
+            >Company</span
+          >
+        </a>
+      </li>
 
-    <div class="md:mt-12 md:w-48 md:fixed md:left-0 md:top-0 content-center md:content-start text-left justify-between">
-        <ul class="list-reset flex flex-row md:flex-col py-0 md:py-3 px-1 md:px-2 text-center md:text-left">
-            <li class="mr-3 flex-1">
-                <a data-navigo href="/" x-bind:class="{ 'border-pink-600' : $store.selectedPage =='index'}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-pink-700">
-                    <i x-bind:class="{ 'text-pink-600' : $store.selectedPage =='index'}" class="fas fa-chart-area pr-0 md:pr-3"></i><span class="pb-1 md:pb-0 text-xs md:text-base text-white md:text-white block md:inline-block">Home</span>
-                </a>
-            </li>
-            <li class="mr-3 flex-1">
-                <a data-navigo href="/company/selected" x-bind:class="{ 'border-blue-600' : $store.selectedPage =='company'}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-blue-700">
-                    <i x-bind:class="{ 'text-blue-600' : $store.selectedPage =='company'}" class="fas fa-building pr-0 md:pr-3"></i><span class="pb-1 md:pb-0 text-xs md:text-base text-white md:text-white block md:inline-block">Company</span>
-                </a>
-            </li>
+      <li class="mr-3 flex-1">
+        <a
+          data-navigo
+          href="/brand"
+          x-bind:class="{ 'border-yellow-600' : $store.selectedPage =='brand'}"
+          class="
+            block
+            py-1
+            md:py-3
+            pl-1
+            align-middle
+            text-white
+            no-underline
+            hover:text-white
+            border-b-2 border-gray-800
+            hover:border-yellow-700
+          "
+        >
+          <i
+            x-bind:class="{ 'text-yellow-600' : $store.selectedPage =='brand'}"
+            class="fas fa-list pr-0 md:pr-3"
+          ></i
+          ><span
+            class="
+              pb-1
+              md:pb-0
+              text-xs
+              md:text-base
+              text-white
+              md:text-white
+              block
+              md:inline-block
+            "
+            >Brands</span
+          >
+        </a>
+      </li>
 
-            <li class="mr-3 flex-1">
-                <a data-navigo href="/brand" x-bind:class="{ 'border-yellow-600' : $store.selectedPage =='brand'}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-yellow-700">
-                    <i x-bind:class="{ 'text-yellow-600' : $store.selectedPage =='brand'}" class="fas fa-list pr-0 md:pr-3"></i><span class="pb-1 md:pb-0 text-xs md:text-base text-white md:text-white block md:inline-block">Brands</span>
-                </a>
-            </li>
+      <li class="mr-3 flex-1">
+        <a
+          data-navigo
+          href="/channel"
+          x-bind:class="{ 'border-green-600' : $store.selectedPage =='channel'}"
+          class="
+            block
+            py-1
+            md:py-3
+            pl-1
+            align-middle
+            text-white
+            no-underline
+            hover:text-white
+            border-b-2 border-gray-800
+            hover:border-green-700
+          "
+        >
+          <i
+            x-bind:class="{ 'text-green-600' : $store.selectedPage =='channel'}"
+            class="fas fa-store pr-0 md:pr-3"
+          ></i
+          ><span
+            class="
+              pb-1
+              md:pb-0
+              text-xs
+              md:text-base
+              text-white
+              md:text-white
+              block
+              md:inline-block
+            "
+            >Channels</span
+          >
+        </a>
+      </li>
 
-            <li class="mr-3 flex-1">
-                <a data-navigo href="/channel" x-bind:class="{ 'border-green-600' : $store.selectedPage =='channel'}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-green-700">
-                    <i x-bind:class="{ 'text-green-600' : $store.selectedPage =='channel'}" class="fas fa-store pr-0 md:pr-3"></i><span class="pb-1 md:pb-0 text-xs md:text-base text-white md:text-white block md:inline-block">Channels</span>
-                </a>
-            </li>
+      <li class="mr-3 flex-1">
+        <a
+          data-navigo
+          href="/item"
+          x-bind:class="{ 'border-red-600' : $store.selectedPage =='item'}"
+          class="
+            block
+            py-1
+            md:py-3
+            pl-1
+            align-middle
+            text-white
+            no-underline
+            hover:text-white
+            border-b-2 border-gray-800
+            hover:border-red-700
+          "
+        >
+          <i
+            x-bind:class="{ 'text-red-600' : $store.selectedPage =='item'}"
+            class="fas fa-box pr-0 md:pr-3"
+          ></i
+          ><span
+            class="
+              pb-1
+              md:pb-0
+              text-xs
+              md:text-base
+              text-white
+              md:text-white
+              block
+              md:inline-block
+            "
+            >Items</span
+          >
+        </a>
+      </li>
 
-
-            <li class="mr-3 flex-1">
-                <a data-navigo href="/orders" x-bind:class="{ 'border-green-600' : $store.selectedPage =='orders'}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-green-700">
-                    <i x-bind:class="{ 'text-green-600' : $store.selectedPage =='orders'}" class="fas fa-shopping-cart pr-0 md:pr-3"></i><span class="pb-1 md:pb-0 text-xs md:text-base text-white md:text-white block md:inline-block">Orders</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-
+      <li class="mr-3 flex-1">
+        <a
+          data-navigo
+          href="/package"
+          x-bind:class="{ 'border-blue-600' : $store.selectedPage =='package'}"
+          class="
+            block
+            py-1
+            md:py-3
+            pl-1
+            align-middle
+            text-white
+            no-underline
+            hover:text-white
+            border-b-2 border-gray-800
+            hover:border-blue-700
+          "
+        >
+          <i
+            x-bind:class="{ 'text-blue-600' : $store.selectedPage =='package'}"
+            class="fas fa-boxes pr-0 md:pr-3"
+          ></i
+          ><span
+            class="
+              pb-1
+              md:pb-0
+              text-xs
+              md:text-base
+              text-white
+              md:text-white
+              block
+              md:inline-block
+            "
+            >Packages</span
+          >
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
