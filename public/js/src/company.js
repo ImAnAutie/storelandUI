@@ -3,6 +3,163 @@ import { makeStorelandRequest } from "./storelandCORE.js";
 import { Iodine } from "@kingshott/iodine";
 const iodine = new Iodine();
 
+const loadCompanyProdigi = async function (params) {
+  console.log(
+    "About to load the company prodigi page, initing alpine data model"
+  );
+  Alpine.store("selectedPage", "company");
+  console.log(params);
+  if (params.companyId == "selected") {
+    params.companyId = localStorage.selectedCompanyId;
+    router.navigate(router.generate("company.edit", params));
+    return;
+  }
+
+  try {
+    const companyRes = await makeStorelandRequest(
+      `company/${params.companyId}`,
+      "GET"
+    );
+    console.table(companyRes);
+    if (companyRes.status) {
+      const company = companyRes.company;
+      Object.assign(company, {
+        fieldValidations: {
+          key: true,
+        },
+        validateField: function (fieldName) {
+          const pageCompanyProdigi = Alpine.store("pageCompanyProdigi");
+          switch (fieldName) {
+            case "name":
+              pageCompanyProdigi.fieldValidations.key = iodine.isValid(
+                pageCompanyProdigi.key,
+                ["required"]
+              );
+              break;
+          }
+        },
+        formSubmitError: function (title, message) {
+          Alpine.store("appAlert").show(
+            title,
+            message,
+            "Cancel",
+            "Ok",
+            "gray",
+            false,
+            function () {
+              Alpine.store("appAlert").hide();
+            }
+          );
+        },
+        formSubmit: async function () {
+          console.log("Validating company prodigi data");
+          const pageCompanyProdigi = Alpine.store("pageCompanyProdigi");
+          if (!iodine.isValid(pageCompanyProdigi.key, ["required"])) {
+            return pageCompanyProdigi.formSubmitError(
+              "prodigi API key required",
+              "A prodigi API key is required"
+            );
+          }
+          const editCompanyData = {
+            prodigiApiKey: pageCompanyProdigi.key,
+          };
+          console.log("Submtting company edit");
+          console.table(editCompanyData);
+          Alpine.store("loading", true);
+          try {
+            const editCompanyRes = await makeStorelandRequest(
+              `company/${
+                Alpine.store("pageCompanyProdigi")._id
+              }/config/prodigi`,
+              "PATCH",
+              editCompanyData
+            );
+            console.table(editCompanyRes);
+            if (editCompanyRes.status) {
+              console.log("Successfully edited company prodigi information");
+              //@todo some sort of toast?
+              router.navigate(
+                router.generate("company", {
+                  companyId: Alpine.store("pageCompanyProdigi")._id,
+                })
+              );
+            } else {
+              console.log("API returned false status");
+              Alpine.store("loading", false);
+              Alpine.store("appAlert").show(
+                "Something went wrong",
+                editCompanyRes.message,
+                "Cancel",
+                "Try again",
+                "green",
+                true,
+                function () {
+                  Alpine.store("appAlert").visible = false;
+                  Alpine.store("pageCompanyEdit").formSubmit();
+                }
+              );
+              return;
+            }
+          } catch (error) {
+            //@TOOO report this
+            console.log("Error editing company");
+            console.log(error);
+            Alpine.store("loading", false);
+            Alpine.store("appAlert").show(
+              "Something went wrong",
+              "A network error occured when editing the prodigi information for this company",
+              "Cancel",
+              "Try again",
+              "green",
+              true,
+              function () {
+                Alpine.store("appAlert").visible = false;
+                Alpine.store("pageCompanyProdigi").formSubmit();
+              }
+            );
+          }
+        },
+      });
+
+      Alpine.store("pageCompanyProdigi", company);
+    } else {
+      console.log("API returned false status, something went wrong");
+      Alpine.store("loading", false);
+      Alpine.store("appLoading", true);
+      Alpine.store("appAlert").show(
+        "Something went wrong",
+        "Failed loading company information. Please try again",
+        "Cancel",
+        "Try again",
+        "green",
+        false,
+        function () {
+          location.reload();
+        }
+      );
+      return;
+    }
+  } catch (error) {
+    //@TOOO report this
+    console.log("Error fetching company data");
+    console.log(error);
+    Alpine.store("loading", false);
+    Alpine.store("appLoading", true);
+    Alpine.store("appAlert").show(
+      "Something went wrong",
+      "Failed loading company information. Please try again",
+      "Cancel",
+      "Try again",
+      "green",
+      false,
+      function () {
+        location.reload();
+      }
+    );
+    return;
+  }
+};
+
 const loadCompanyEdit = async function (params) {
   console.log("About to load the company edit page, initing alpine data model");
   Alpine.store("selectedPage", "company");
@@ -573,6 +730,7 @@ const loadUserSelectedCompany = async function () {
   }
 };
 export {
+  loadCompanyProdigi,
   loadCompanyEdit,
   loadCompanyPage,
   loadCompanyList,

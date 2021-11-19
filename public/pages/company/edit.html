@@ -66,6 +66,7 @@
   <input x-ref="file" @change="$store.pageCompanyEdit.logo = await $store.utilityFunctions.fileToDataUrl($refs.file.files[0])" type="file" class="hidden" />
 </label>
 <img x-data x-show="$store.pageCompanyEdit.logo" x-bind:src="$store.pageCompanyEdit.logo" class="h-24 w-24" />
+
 <button type="submit"   class="
     flex flex-col w-full
     items-center

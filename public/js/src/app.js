@@ -24,12 +24,20 @@ const {
 } = require("./brand.js");
 
 const {
+  loadCompanyProdigi,
   loadCompanyEdit,
   loadCompanyPage,
   loadCompanyList,
   loadCompanyNew,
   loadUserSelectedCompany,
 } = require("./company.js");
+
+const {
+  loadItemNew,
+  loadItemPage,
+  loadItemEdit,
+  loadItemList,
+} = require("./item.js");
 
 const initKeycloak = async function () {
   console.log("initKeycloak");
@@ -151,6 +159,13 @@ router.on({
     uses: function (params) {
       console.log("I am on the company edit page");
       Alpine.store("loadPage")("company/edit", params);
+    },
+  },
+  "/company/:companyId/prodigi": {
+    as: "company.prodigi",
+    uses: function (params) {
+      console.log("I am on the company prodigi page");
+      Alpine.store("loadPage")("company/prodigi", params);
     },
   },
 
@@ -375,6 +390,9 @@ Alpine.store("loadPage", async function (page, params) {
       //await loadIndexPage(params);
       break;
 
+    case "company/prodigi":
+      await loadCompanyProdigi(params);
+      break;
     case "company/edit":
       await loadCompanyEdit(params);
       break;
@@ -411,6 +429,19 @@ Alpine.store("loadPage", async function (page, params) {
       break;
     case "channel/edit":
       await loadChannelEdit(params);
+      break;
+
+    case "item/new":
+      await loadItemNew(params);
+      break;
+    case "item/list":
+      await loadItemList(params);
+      break;
+    case "item/item":
+      await loadItemPage(params);
+      break;
+    case "item/edit":
+      await loadItemEdit(params);
       break;
   }
 

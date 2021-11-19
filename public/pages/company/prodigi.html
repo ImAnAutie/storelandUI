@@ -1,0 +1,44 @@
+<!-- PAGE -->
+
+            <div class="bg-gray-800 pt-3">
+                <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+                    <h3 x-data x-text="$store.pageCompanyProdigi.name" class="font-bold pl-2"></h3>
+                </div>
+            </div>
+
+
+
+<form x-data @submit.prevent="$store.pageCompanyProdigi.formSubmit">
+<div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
+<label class="block">
+  <input x-data 
+  x-bind:class="{ 'border-red-700' : !$store.pageCompanyProdigi.fieldValidations.key}"
+  x-on:change="$store.pageCompanyProdigi.validateField('key');"
+  x-model="$store.pageCompanyProdigi.key"
+  class="form-input mt-1 block w-full"
+  placeholder="My prodigi API key"
+  title="You can find this on the prodigi dashboard under settings->API->X-Pwinty-REST-API-Key"
+  />
+  
+</label>
+
+<button type="submit"   class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-edit"></i> Edit
+</button>
+</div>
+</form>

@@ -2,8 +2,8 @@
 
             <div class="bg-gray-800 pt-3">
                 <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
-                    <h3 x-text="$store.pageCompany.name" class="font-bold pl-2"></h3>
-                    <button @click="router.navigate(router.generate('company.edit',{companyId: router.lastRouteResolved().params.companyId}));"
+                    <h3 x-text="$store.pageItem.name" class="font-bold pl-2"></h3>
+                    <button @click="router.navigate(router.generate('item.edit',{itemId: router.lastRouteResolved().params.itemId}));"
                     class="
                       bg-purple-500
                       text-white
@@ -28,29 +28,6 @@
                   >
                     <i class="fas fa-edit"></i> Edit
                 </button>
-
-                <button @click="router.navigate(router.generate('company.prodigi',{companyId: router.lastRouteResolved().params.companyId}));" class="
-                bg-purple-500
-                text-white
-                active:bg-purple-600
-                font-bold
-                uppercase
-                text-xs
-                px-4
-                py-2
-                rounded
-                shadow
-                hover:shadow-md
-                outline-none
-                focus:outline-none
-                mr-1
-                mb-1
-                ease-linear
-                transition-all
-                duration-150
-              " type="button">
-              <img src="/img/prodigi/logo_white.png" class="fas h-3 w-17"> </button>
-
                 </div>
             </div>
 
@@ -59,7 +36,10 @@
             <div class="flex flex-col">
               <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                  @todo company specific dashboard.
-                </div>
+
+                  <span>ID: </span><span x-text="$store.pageItem._id" title="Use this ID to configure your integration with storelandCORE">618fef78a50bd3414e73c5aa</span>
+              
+              
+                              </div>
               </div>
             </div>

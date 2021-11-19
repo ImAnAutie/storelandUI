@@ -2,8 +2,8 @@
 
 <div class="bg-gray-800 pt-3">
   <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
-      <h3 class="font-bold pl-2">Editing channel <span x-text="$store.pageChannelEdit.name"></span> for <span x-text="$store.appCompany.name"></span></h3>
-      <button x-data @click="$store.pageChannelEdit.delete()"
+      <h3 class="font-bold pl-2">Editing item <span x-text="$store.pageItemEdit.name"></span> for <span x-text="$store.appCompany.name"></span></h3>
+      <button x-data @click="$store.pageItemEdit.delete()"
       class="
         bg-red-500
         text-white
@@ -33,12 +33,12 @@
 
 
 
-<form x-data @submit.prevent="$store.pageChannelEdit.formSubmit">
+<form x-data @submit.prevent="$store.pageItemEdit.formSubmit">
   <div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
   <label class="block">
     <input x-data 
-    x-bind:placeholder="`${$store.appCompany.name} channel`" 
-    x-bind:class="{ 'border-red-700' : !$store.pageChannelEdit.fieldValidations.name}" x-on:change="$store.pageChannelEdit.validateField('name');" x-model="$store.pageChannelEdit.name" class="form-input mt-1 block w-full" />
+    x-bind:placeholder="`${$store.appCompany.name} item`" 
+    x-bind:class="{ 'border-red-700' : !$store.pageItemEdit.fieldValidations.name}" x-on:change="$store.pageItemEdit.validateField('name');" x-model="$store.pageItemEdit.name" class="form-input mt-1 block w-full" />
     
   </label>    
   
@@ -66,7 +66,7 @@
 
 
 <!-- This example requires Tailwind CSS v2.0+ -->
-<div x-cloak x-data x-show="$store.pageChannelEdit.deleteConfirm.visible" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div x-cloak x-data x-show="$store.pageItemEdit.deleteConfirm.visible" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <!--
       Background overlay, show/hide based on modal state.
@@ -105,9 +105,9 @@
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Are you sure you wish to delete?</h3>
             <div class="mt-2">
-              <p class="text-sm text-gray-500">To confirm, type in the channel name <span x-data x-text="$store.pageChannelEdit.name"></span></p>
+              <p class="text-sm text-gray-500">To confirm, type in the item name <span x-data x-text="$store.pageItemEdit.name"></span></p>
               <label class="block">
-                <input x-data="" x-model="$store.pageChannelEdit.deleteConfirm.name" class="form-input mt-1 block w-full" x-bind:placeholder="$store.pageChannelEdit.name">
+                <input x-data="" x-model="$store.pageItemEdit.deleteConfirm.name" class="form-input mt-1 block w-full" x-bind:placeholder="$store.pageItemEdit.name">
                 
               </label>
             </div>
@@ -116,10 +116,10 @@
       </div>
       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
 
-        <button x-data x-on:click="$store.pageChannelEdit.deleteConfirm.confirm" x-text="$store.appAlert.actionText" class="bg-red-600 hover:bg-red-700 focus:ring-red-500 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" type="button"></button>
+        <button x-data x-on:click="$store.pageItemEdit.deleteConfirm.confirm" x-text="$store.appAlert.actionText" class="bg-red-600 hover:bg-red-700 focus:ring-red-500 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" type="button"></button>
 
 
-        <button @click="$store.pageChannelEdit.deleteConfirm.visible=false"  type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+        <button @click="$store.pageItemEdit.deleteConfirm.visible=false"  type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
       </div>
     </div>
   </div>

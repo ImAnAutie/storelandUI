@@ -1,0 +1,103 @@
+<!-- PAGE -->
+
+            <div class="bg-gray-800 pt-3">
+                <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+                    <h3 class="font-bold pl-2">New item for <span x-text="$store.appCompany.name"></span></h3>
+                </div>
+            </div>
+
+
+
+<form x-data @submit.prevent="$store.pageItemNew.formSubmit">
+<div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
+<label class="block">
+  <input x-data 
+  x-bind:placeholder="`${$store.appCompany.name} item`" 
+  
+  x-bind:class="{ 'border-red-700' : !$store.pageItemNew.fieldValidations.name}" x-on:change="$store.pageItemNew.validateField('name');" x-model="$store.pageItemNew.name"
+  class="form-input mt-1 block w-full"
+  />
+  
+</label>
+
+<label class="block text-left" style="max-width: 400px">
+  <select
+  x-bind:class="{ 'border-red-700' : !$store.pageItemNew.fieldValidations.type}"
+  x-on:change="$store.pageItemNew.type = $event.target.value; $store.pageItemNew.validateField('type');"
+  
+  class="form-select block w-full mt-1">
+    <option value="" disabled selected>Select item type</option>
+    <template x-for="itemType in ['standard','prodigi']">
+      <option x-text="itemType"></option>
+  </template>
+  </select>
+</label>
+
+<div x-show="$store.pageItemNew.type == 'standard'">
+  <label class="block">
+    <input x-data 
+    placeholder="Weight (grams)" 
+    x-bind:class="{ 'border-red-700' : !$store.pageItemNew.fieldValidations.weight}"
+    x-on:change="$store.pageItemNew.validateField('weight');"
+    x-model="$store.pageItemNew.weight"
+    type="number" min="0" step="1"
+    class="form-input mt-1 block w-full"
+    title="Weight (grams)"
+    />
+  </label>
+</div>
+
+<div x-show="$store.pageItemNew.type == 'prodigi'">
+  <label class="block">
+    <input x-data 
+    placeholder="prodigi SKU" 
+    x-bind:class="{ 'border-red-700' : !$store.pageItemNew.fieldValidations.prodigi.sku}"
+    x-on:change="$store.pageItemNew.validateField('prodigi.sku');"
+    x-model="$store.pageItemNew.prodigi.sku"
+    class="form-input mt-1 block w-full"
+    />
+  </label>
+
+  <label class="block pl-5" 
+  x-show="$store.pageItemNew.prodigi.description"
+  x-html="$store.pageItemNew.prodigi.description"
+  ></label>
+  
+  <template x-for="attribute in $store.pageItemNew.prodigi.attributes">
+    <label class="block text-left pl-5" style="max-width: 400px">
+      <select  
+            class="form-select block w-full mt-1"
+            x-bind:attribute="attribute.name"
+            x-on:change="$store.pageItemNew.prodigi.selectedAttributes[attribute.name] = $event.target.value;"
+        >
+        <option disabled selected x-text="attribute.name"></option>
+        <template x-for="option in attribute.options">
+          <option x-bind:value="option" x-text="option"></option>
+      </template>
+      </select>
+    </label>
+
+
+</template>
+</div>
+
+<button type="submit"   class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-plus"></i> Create
+</button>
+</div>
+</form>
