@@ -38,7 +38,164 @@
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
                   <span>ID: </span><span x-text="$store.pageItem._id" title="Use this ID to configure your integration with storelandCORE">618fef78a50bd3414e73c5aa</span>
-              
+                  <div x-show="$store.pageItem.type=='itemSet'">
+
+                    <!-- Card -->
+<div class="shadow-md rounded-md">
+  <div class="p-5">
+    <h5 class="text-xl font-semibold mb-2">Item set</h5>
+
+   
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th
+            scope="col"
+            class="
+              px-6
+              py-3
+              text-left text-xs
+              font-medium
+              text-gray-500
+              uppercase
+              tracking-wider
+            "
+          >
+            ID
+          </th>
+
+          <th
+            scope="col"
+            class="
+              px-6
+              py-3
+              text-left text-xs
+              font-medium
+              text-gray-500
+              uppercase
+              tracking-wider
+            "
+          >
+            Quantity
+          </th>
+
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <template x-for="(item, index) in $store.pageItem.itemSet" :key="index">
+        <tr x-data x-bind:class="{ 'bg-gray-50' : !$store.utilityFunctions.isEven(index)}">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="ml-4">
+                <div x-data 
+                x-on:click="router.navigate(router.generate('item',{itemId  :item.item._id}));" x-text="item.item.name" class="cursor-pointer text-sm font-medium text-gray-900"></div>
+              </div>
+            </div>
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="ml-4">
+                <div x-data 
+                x-on:click="router.navigate(router.generate('item',{itemId  :item.item._id}));" x-text="item.qty" class="cursor-pointer text-sm font-medium text-gray-900"></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </template>
+      </tbody>
+    </table>
+ 
+  </div>
+</div>
+<!-- Card -->
+
+
+
+
+
+                  </div>
+
+                  <div x-show="$store.pageItem.type=='prodigi'">
+
+                    <!-- Card -->
+<div class="shadow-md rounded-md">
+  <div class="p-5">
+    <h5 class="text-xl font-semibold mb-2">prodigi</h5>
+    <div class="1-xl">
+    <span>
+      SKU:
+    </span>
+    <span x-text="$store.pageItem.prodigi.sku"></span>
+  </div>
+
+    <table x-show="$store.pageItem.prodigi.attributes.length > 0" class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th
+            scope="col"
+            class="
+              px-6
+              py-3
+              text-left text-xs
+              font-medium
+              text-gray-500
+              uppercase
+              tracking-wider
+            "
+          >
+            Name
+          </th>
+
+          <th
+            scope="col"
+            class="
+              px-6
+              py-3
+              text-left text-xs
+              font-medium
+              text-gray-500
+              uppercase
+              tracking-wider
+            "
+          >
+            Value
+          </th>
+
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <template x-for="(attribute, index) in $store.pageItem.prodigi.attributes" :key="index">
+        <tr x-data x-bind:class="{ 'bg-gray-50' : !$store.utilityFunctions.isEven(index)}">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="ml-4">
+                <div x-data x-text="attribute.name" class="cursor-pointer text-sm font-medium text-gray-900"></div>
+              </div>
+            </div>
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="ml-4">
+                <div x-data x-text="attribute.value" class="cursor-pointer text-sm font-medium text-gray-900"></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </template>
+      </tbody>
+    </table>
+ 
+  </div>
+</div>
+<!-- Card -->
+
+
+
+
+
+                  </div>
               
                               </div>
               </div>

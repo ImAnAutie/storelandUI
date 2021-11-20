@@ -229,7 +229,7 @@ const loadItemEdit = async function (params) {
         //@todo actually delete packages containing this item
         Alpine.store("appAlert").show(
           "Are you sure?",
-          "Deleting this item will delete all packages containing this item. This CANNOT be undone.",
+          "Deleting this item will delete all item sets and packages containing this item. This CANNOT be undone.",
           "Cancel",
           "Yes, delete this item",
           "red",
@@ -288,6 +288,25 @@ const loadItemNew = async function () {
     name: "",
     type: "",
     weight: 0,
+    itemList: [],
+    itemSet: [],
+    itemSetAddItem: "",
+    itemSetIncrement: function (itemId, incrementAmount) {
+      console.log(itemId, incrementAmount);
+      const itemSet = Alpine.store("pageItemNew").itemSet;
+      const itemIndex = itemSet.findIndex((item) => item.id == itemId);
+      console.log(itemIndex);
+      const item = itemSet[itemIndex];
+      console.table(item);
+      item.qty = item.qty + incrementAmount;
+      console.table(item);
+      if (item.qty <= 0) {
+        console.log("Item qty zero or less, removing from set");
+        itemSet.splice(itemIndex, 1);
+      }
+      console.log(itemSet);
+      Alpine.store("pageItemNew").itemSet = itemSet;
+    },
     prodigi: {
       sku: "",
       description: "",
@@ -302,7 +321,44 @@ const loadItemNew = async function () {
         sku: true,
       },
     },
-    validateField: function (fieldName) {
+    itemSetSelect: async function (itemId) {
+      if (!itemId) {
+        return;
+      }
+      Alpine.store("pageItemNew").itemSetAddItem = "";
+      console.log(`Item: ${itemId} selected`);
+      Alpine.store("loading", true);
+      const itemRes = await makeStorelandRequest(
+        `company/${Alpine.store("appCompany")._id}/item/${itemId}`,
+        "GET"
+      );
+      console.table(itemRes);
+      Alpine.store("loading", false);
+      if (itemRes.status) {
+        console.log("Successfully fetched item itemRes");
+        const item = itemRes.item;
+        console.table(item);
+        Alpine.store("pageItemNew").itemSet.push({
+          id: item._id,
+          name: item.name,
+          qty: 1,
+        });
+      } else {
+        console.log("Error loading item item");
+        Alpine.store("appAlert").show(
+          "Something went wrong loading the selected item",
+          itemRes.message,
+          "Cancel",
+          "Try again",
+          "green",
+          true,
+          function () {
+            location.reload();
+          }
+        );
+      }
+    },
+    validateField: async function (fieldName) {
       const pageItemNew = Alpine.store("pageItemNew");
       switch (fieldName) {
         case "name":
@@ -313,6 +369,42 @@ const loadItemNew = async function () {
           pageItemNew.fieldValidations.type = iodine.isValid(pageItemNew.type, [
             "required",
           ]);
+
+          switch (pageItemNew.type) {
+            case "itemSet":
+              console.log("Fetching list of items");
+              Alpine.store("loading", true);
+              const itemListRes = await makeStorelandRequest(
+                `company/${Alpine.store("appCompany")._id}/item`,
+                "GET"
+              );
+              console.table(itemListRes);
+              Alpine.store("loading", false);
+              if (itemListRes.status) {
+                console.log("Successfully fetched item list");
+                const itemList = itemListRes.item.filter(function (item) {
+                  if (item.type !== "itemSet") {
+                    return item;
+                  }
+                });
+                console.log(itemList);
+                Alpine.store("pageItemNew").itemList = itemList;
+              } else {
+                console.log("Error loading item list");
+                Alpine.store("appAlert").show(
+                  "Something went wrong loading the item list",
+                  itemListRes.message,
+                  "Cancel",
+                  "Try again",
+                  "green",
+                  true,
+                  function () {
+                    location.reload();
+                  }
+                );
+              }
+              break;
+          }
           break;
         case "weight":
           pageItemNew.fieldValidations.weight =
@@ -475,6 +567,22 @@ const loadItemNew = async function () {
             }
           }
           break;
+        case "itemSet":
+          //We need to check if the item set is valid again itemList
+          const itemSet = pageItemNew.itemSet;
+          newItemData.itemSet = itemSet;
+          if (itemSet.length < 1) {
+            return pageItemNew.formSubmitError(
+              "Item set requires at least one item",
+              "Please add at least one item to this item set"
+            );
+          }
+          break;
+        default:
+          return pageItemNew.formSubmitError(
+            `Unknown item type`,
+            `Please select a an item type from the list`
+          );
       }
 
       console.log("Submtting new item");

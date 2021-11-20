@@ -27,11 +27,60 @@
   
   class="form-select block w-full mt-1">
     <option value="" disabled selected>Select item type</option>
-    <template x-for="itemType in ['standard','prodigi']">
-      <option x-text="itemType"></option>
+    <template x-for="itemType in [
+      {
+        name: 'Standard',
+        value: 'standard',
+      }, 
+      {
+        name: 'Item set',
+        value: 'itemSet',
+      }, 
+      {
+        name: 'prodigi',
+        value: 'prodigi',
+      }
+      ]">
+      <option x-bind:value="itemType.value" x-text="itemType.name"></option>
   </template>
   </select>
 </label>
+
+<div x-show="$store.pageItemNew.type == 'itemSet'">
+  <label class="block">
+    <select
+    x-bind:value="$store.pageItemNew.itemSetAddItem"
+    x-on:change="$store.pageItemNew.itemSetSelect($event.target.value);"
+    
+    class="form-select block w-full mt-1">
+      <option value="" selected>Item to add to set</option>
+      <template x-for="item in $store.pageItemNew.itemList">
+        <option x-bind:value="item._id" x-text="item.name"></option>
+    </template>
+    </select>
+
+    <template x-for="item in $store.pageItemNew.itemSet">
+      <div class="block pl-5 grid grid-cols-10">
+        <div class="col-span-2">
+          <button type="button" @click="$store.pageItemNew.itemSetIncrement(item.id,-1);">
+            <span class="fas fa-minus"></span>
+          </button>  
+        </div>
+        <div class="col-span-5">
+          <span x-text="item.name"></span>
+        </div>
+        <div class="col-span-1">
+          <span x-text="item.qty"></span>
+        </div>
+        <div class="col-span-2">
+          <button type="button" @click="$store.pageItemNew.itemSetIncrement(item.id,1);">
+            <span class="fas fa-plus"></span>
+          </button>  
+        </div>
+      </div>
+    </template>
+  </label>
+</div>
 
 <div x-show="$store.pageItemNew.type == 'standard'">
   <label class="block">
@@ -62,6 +111,8 @@
   x-show="$store.pageItemNew.prodigi.description"
   x-html="$store.pageItemNew.prodigi.description"
   ></label>
+
+  <!-- @TODO Artwork upload -->
   
   <template x-for="attribute in $store.pageItemNew.prodigi.attributes">
     <label class="block text-left pl-5" style="max-width: 400px">
