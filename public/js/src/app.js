@@ -1,6 +1,7 @@
 import { config } from "./config.js";
 import { getKeycloak } from "./keycloak.js";
 import { makeStorelandRequest } from "./storelandCORE.js";
+window.makeStorelandRequest = makeStorelandRequest;
 const keycloak = getKeycloak();
 
 const Navigo = require("navigo");
@@ -38,6 +39,16 @@ const {
   loadItemEdit,
   loadItemList,
 } = require("./item.js");
+
+const {
+  loadPackageList,
+  loadPackageNew,
+  loadPackagePage,
+  loadPackageEdit,
+  loadPackageAssignment,
+  loadPackageCategory,
+} = require("./package.js");
+const { loadCategoryNew } = require("./category.js");
 
 const initKeycloak = async function () {
   console.log("initKeycloak");
@@ -255,6 +266,78 @@ router.on({
       Alpine.store("loadPage")("item/edit", params);
     },
   },
+
+  "/package": {
+    as: "package.list",
+    uses: function () {
+      console.log("I am on the packages list page");
+      Alpine.store("loadPage")("package/list");
+    },
+  },
+  "/package/new": {
+    as: "package.new",
+    uses: function () {
+      console.log("I am on the new package page");
+      Alpine.store("loadPage")("package/new");
+    },
+  },
+  "/package/:packageId": {
+    as: "package",
+    uses: function (params) {
+      console.log("I am on the package page");
+      Alpine.store("loadPage")("package/package", params);
+    },
+  },
+  "/package/:packageId/edit": {
+    as: "package.edit",
+    uses: function (params) {
+      console.log("I am on the package edit page");
+      Alpine.store("loadPage")("package/edit", params);
+    },
+  },
+  "/package/:packageId/assignment": {
+    as: "package.assignment",
+    uses: function (params) {
+      console.log("I am on the package assignment page");
+      Alpine.store("loadPage")("package/assignment", params);
+    },
+  },
+
+  "/package/:packageId/category": {
+    as: "package.category",
+    uses: function (params) {
+      console.log("I am on the package category page");
+      Alpine.store("loadPage")("package/category", params);
+    },
+  },
+  "/category": {
+    as: "category.list",
+    uses: function () {
+      console.log("I am on the categories list page");
+      Alpine.store("loadPage")("category/list");
+    },
+  },
+  "/category/new": {
+    as: "category.new",
+    uses: function () {
+      console.log("I am on the new category page");
+      Alpine.store("loadPage")("category/new");
+    },
+  },
+  "/category/:categoryId": {
+    as: "category",
+    uses: function (params) {
+      console.log("I am on the category page");
+      Alpine.store("loadPage")("category/category", params);
+    },
+  },
+  "/category/:categoryId/edit": {
+    as: "category.edit",
+    uses: function (params) {
+      console.log("I am on the category edit page");
+      Alpine.store("loadPage")("category/edit", params);
+    },
+  },
 });
 
 router.notFound(function () {
@@ -442,6 +525,29 @@ Alpine.store("loadPage", async function (page, params) {
       break;
     case "item/edit":
       await loadItemEdit(params);
+      break;
+
+    case "package/list":
+      await loadPackageList(params);
+      break;
+    case "package/new":
+      await loadPackageNew(params);
+      break;
+    case "package/package":
+      await loadPackagePage(params);
+      break;
+    case "package/edit":
+      await loadPackageEdit(params);
+      break;
+    case "package/assignment":
+      await loadPackageAssignment(params);
+      break;
+    case "package/category":
+      await loadPackageCategory(params);
+      break;
+
+    case "category/new":
+      await loadCategoryNew(params);
       break;
   }
 

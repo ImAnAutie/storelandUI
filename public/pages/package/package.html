@@ -1,0 +1,110 @@
+<!-- PAGE -->
+
+<div class="bg-gray-800 pt-3">
+  <div
+    class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white"
+  >
+    <h3 x-text="$store.pagePackage.name" class="font-bold pl-2"></h3>
+    <button
+      @click="router.navigate(router.generate('package.edit',{packageId: router.lastRouteResolved().params.packageId}));"
+      class="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+      type="button"
+    >
+      <i class="fas fa-edit"></i> Edit
+    </button>
+
+    <button
+    @click="router.navigate(router.generate('package.assignment',{packageId: router.lastRouteResolved().params.packageId}));"
+    class="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+    type="button"
+  >
+    <i class="fas fa-object-group"></i> Channels
+  </button>
+
+  <button
+  @click="router.navigate(router.generate('package.category',{packageId: router.lastRouteResolved().params.packageId}));"
+  class="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+  type="button"
+>
+  <i class="fas fa-object-group"></i> Categories
+</button>
+</div>
+</div>
+
+<div class="flex flex-col">
+  <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+      <span>ID: </span
+      ><span
+        x-text="$store.pagePackage._id"
+        title="Use this ID to configure your integration with storelandCORE"
+      ></span>
+      <div x-show="$store.pagePackage.type=='packageSet'">
+        <!-- Card -->
+        <div class="shadow-md rounded-md">
+          <div class="p-5">
+            <h5 class="text-xl font-semibold mb-2">package set</h5>
+
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Name
+                  </th>
+
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Quantity
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <template
+                  x-for="(package, index) in $store.pagePackage.packageSet"
+                  :key="index"
+                >
+                  <tr
+                    x-data
+                    x-bind:class="{ 'bg-gray-50' : !$store.utilityFunctions.isEven(index)}"
+                  >
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex packages-center">
+                        <div class="ml-4">
+                          <div
+                            x-data
+                            x-on:click="router.navigate(router.generate('package',{packageId  :package.package._id}));"
+                            x-text="package.package.name"
+                            class="cursor-pointer text-sm font-medium text-gray-900"
+                          ></div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex packages-center">
+                        <div class="ml-4">
+                          <div
+                            x-data
+                            x-on:click="router.navigate(router.generate('package',{packageId  :package.package._id}));"
+                            x-text="package.qty"
+                            class="cursor-pointer text-sm font-medium text-gray-900"
+                          ></div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Card -->
+      </div>
+    </div>
+  </div>
+</div>

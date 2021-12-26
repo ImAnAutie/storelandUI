@@ -51,6 +51,7 @@ const loadItemList = async function () {
     return;
   }
 };
+
 const loadItemEdit = async function (params) {
   console.log("About to load the item edit page, initing alpine data model");
   Alpine.store("selectedPage", "item");
@@ -293,7 +294,11 @@ const loadItemNew = async function () {
     itemSetAddItem: "",
     itemSetIncrement: function (itemId, incrementAmount) {
       console.log(itemId, incrementAmount);
-      const itemSet = Alpine.store("pageItemNew").itemSet;
+      //Fix for a weird bug where removing the first item
+      //set the following one to qty 0
+      const itemSet = JSON.parse(
+        JSON.stringify(Alpine.store("pageItemNew").itemSet)
+      );
       const itemIndex = itemSet.findIndex((item) => item.id == itemId);
       console.log(itemIndex);
       const item = itemSet[itemIndex];

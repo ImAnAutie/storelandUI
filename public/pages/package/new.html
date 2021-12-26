@@ -1,0 +1,284 @@
+<!-- PAGE -->
+
+            <div class="bg-gray-800 pt-3">
+                <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+                    <h3 class="font-bold pl-2">New package for <span x-text="$store.appCompany.name"></span></h3>
+                </div>
+            </div>
+
+
+
+<form x-data @submit.prevent="$store.pagePackageNew.formSubmit">
+<div class="p-4 shadow-md rounded-md text-left" style="max-width: 400px">
+<label class="block">
+  <input x-data 
+  x-bind:placeholder="`${$store.appCompany.name} package`" 
+  
+  x-bind:class="{ 'border-red-700' : !$store.pagePackageNew.fieldValidations.name}" x-on:change="$store.pagePackageNew.validateField('name');" x-model="$store.pagePackageNew.name"
+  class="form-input mt-1 block w-full"
+  />
+  
+</label>
+
+<button type="button"
+  @click="$store.pagePackageNew.newAttribute"
+  class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-plus"></i> New Attribute
+</button>
+<template x-data x-for="(attribute, attributeIndex) in $store.pagePackageNew.attributes">
+  <div class="pl-2">
+  <label class="block">
+    <input
+    x-model="attribute.name"
+    x-on:change="$store.pagePackageNew.updateVariantAttributeList();"
+    class="form-input mt-1 block w-full"
+    title="Name for this attribute"
+    />
+  </label>
+  <div class="pl-2">
+  <label class="block">
+    <input
+    class="form-input mt-1 block w-full"
+    title="Option to add to this attribute"
+    x-model="attribute.optionToAdd"
+    />
+  </label>
+  <button type="button"
+  @click="$store.pagePackageNew.attributeAddOption(attributeIndex)"
+  class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-plus"></i> Add option
+</button>
+
+     <template x-data x-for="(option,optionIndex) in attribute.options">
+      <div class="block pl-5 grid grid-cols-10">
+        <div class="col-span-8">
+          <span x-text="option"></span>
+        </div>
+        <div class="col-span-2">
+          <button type="button" @click="$store.pagePackageNew.removeAttributeOption(attributeIndex,optionIndex);">
+            <span class="fas fa-trash"></span>
+          </button>  
+        </div>
+      </div>
+    </template>
+
+
+  <button type="button"
+    @click="$store.pagePackageNew.removeAttribute(attributeIndex)"
+    class="
+      flex flex-col w-full
+      items-center
+      bg-white
+      rounded-md
+      shadow-md
+      tracking-wide
+      uppercase
+      border border-blue
+      cursor-pointer
+      hover:bg-red-600 hover:text-white
+      text-red-600
+      ease-linear
+      transition-all
+      duration-150
+    " type="button">
+    <i class="fas fa-minus"></i> Remove attribute
+  </button>
+</div>
+  <br />
+</div>
+</template>
+
+<button type="button"
+  @click="$store.pagePackageNew.newVariant"
+  class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-plus"></i> New variant
+</button>
+
+
+<template x-data x-for="(variant, variantIndex) in $store.pagePackageNew.variants">
+  <div class="pl-2">
+  <label class="block">
+    <input
+    x-model="variant.name"
+    class="form-input mt-1 block w-full"
+    title="Name for this variant"
+    />
+    
+  </label>
+  <label class="block">
+    <input
+    x-model="variant.price"
+    class="form-input mt-1 block w-full"
+    type="number"
+    min="0"
+    step="0.01"
+    title="Price for this variant"
+    />
+    
+  </label>
+  <button type="button"
+    @click="$store.pagePackageNew.removeVariant(variantIndex)"
+    class="
+      flex flex-col w-full
+      items-center
+      bg-white
+      rounded-md
+      shadow-md
+      tracking-wide
+      uppercase
+      border border-blue
+      cursor-pointer
+      hover:bg-red-600 hover:text-white
+      text-red-600
+      ease-linear
+      transition-all
+      duration-150
+    " type="button">
+    <i class="fas fa-minus"></i> Remove variant
+  </button>
+  <label class="block">
+    <template x-data x-for="(attribute,attributeIndex) in variant.attributes">
+          <select
+w
+    x-bind:title="attribute.name"
+    class="form-select block w-full mt-1"
+    x-model="attribute.selected">
+      <option value="" selected></option>
+      <template x-for="option in attribute.options">
+        <option x-bind:value="option" x-text="option"></option>
+    </template>
+    </select>
+
+    </template>
+  </label>
+  <label class="block">
+    <select
+    x-bind:value="$store.pagePackageNew.itemAddItem"
+    x-on:change="$store.pagePackageNew.itemSelect(variantIndex, $event.target.value);"
+    
+    class="form-select block w-full mt-1">
+      <option value="" selected>Item to add to variant</option>
+      <template x-for="item in $store.pagePackageNew.itemList">
+        <option x-bind:value="item._id" x-text="item.name"></option>
+    </template>
+    </select>
+
+    <template x-data x-for="item in variant.items">
+      <div class="block pl-5 grid grid-cols-10">
+        <div class="col-span-2">
+          <button type="button" @click="$store.pagePackageNew.itemIncrement(variantIndex,item.id,-1);">
+            <span class="fas fa-minus"></span>
+          </button>  
+        </div>
+        <div class="col-span-5">
+          <span x-text="item.name"></span>
+        </div>
+        <div class="col-span-1">
+          <span x-html="item.qty"></span>
+        </div>
+        <div class="col-span-2">
+          <button type="button" @click="$store.pagePackageNew.itemIncrement(variantIndex, item.id,1);">
+            <span class="fas fa-plus"></span>
+          </button>  
+        </div>
+      </div>
+    </template>
+  </label>
+
+  <br />
+</div>
+</template>
+
+<label
+  class="
+    flex flex-col
+    items-center
+    px-4
+    py-6
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-purple-600 hover:text-white
+    text-purple-600
+    ease-linear
+    transition-all
+    duration-150
+  "
+>
+  <i class="fas fa-cloud-upload-alt fa-3x"></i>
+  <span class="mt-2 text-base leading-normal">Upload image</span>
+  <input x-ref="file" @change="$store.pagePackageNew.image = await $store.utilityFunctions.fileToDataUrl($refs.file.files[0])" type="file" class="hidden" />
+</label>
+<img x-data x-show="$store.pagePackageNew.image" x-bind:src="$store.pagePackageNew.image" class="h-24 w-24" />
+
+
+
+<button type="submit"   class="
+    flex flex-col w-full
+    items-center
+    bg-white
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-green-600 hover:text-white
+    text-green-600
+    ease-linear
+    transition-all
+    duration-150
+  " type="button">
+  <i class="fas fa-plus"></i> Create
+</button>
+</div>
+</form>
