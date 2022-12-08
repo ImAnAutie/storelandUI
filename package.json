@@ -9,6 +9,6 @@
   "author": "Gregory Oakley-Stevenson <gregory@okonetwork.org.uk>",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.18.2"
   }
 }
